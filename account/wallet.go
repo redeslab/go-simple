@@ -52,14 +52,18 @@ type PWallet struct {
 	key       *WalletKey          `json:"-"`
 }
 
-func NewWallet(auth string) (Wallet, error) {
+func NewWallet(auth string, isLight bool) (Wallet, error) {
 	privateKeyECDSA, err := ecdsa.GenerateKey(crypto.S256(), rand.Reader)
 	if err != nil {
 		return nil, err
 	}
 
+	var n, p = keystore.StandardScryptN, keystore.StandardScryptP
+	if isLight {
+		n, p = keystore.LightScryptN, keystore.LightScryptP
+	}
 	keyBytes := math.PaddedBigBytes(privateKeyECDSA.D, 32)
-	cryptoStruct, err := keystore.EncryptDataV3(keyBytes, []byte(auth), keystore.StandardScryptN, keystore.StandardScryptP)
+	cryptoStruct, err := keystore.EncryptDataV3(keyBytes, []byte(auth), n, p)
 	if err != nil {
 		return nil, err
 	}
