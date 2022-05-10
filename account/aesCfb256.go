@@ -12,7 +12,6 @@ func EncryptWithIV(key, iv, plainTxt []byte) ([]byte, error) {
 
 	block, err := aes.NewCipher(key)
 	if err != nil {
-		logger.Warning("error to create cipher:->", err)
 		return nil, err
 	}
 
@@ -30,7 +29,6 @@ func Encrypt(key []byte, plainTxt []byte) ([]byte, error) {
 
 	block, err := aes.NewCipher(key)
 	if err != nil {
-		logger.Warning("error to create cipher:->", err)
 		return nil, err
 	}
 
@@ -38,7 +36,6 @@ func Encrypt(key []byte, plainTxt []byte) ([]byte, error) {
 
 	iv := cipherText[:aes.BlockSize]
 	if _, err := io.ReadFull(rand.Reader, iv); err != nil {
-		logger.Warning("error to generate IV data:->", err)
 		return nil, err
 	}
 
@@ -52,7 +49,6 @@ func Decrypt(key []byte, cipherTxt []byte) ([]byte, error) {
 
 	block, err := aes.NewCipher(key)
 	if err != nil {
-		logger.Warning("error to create cipher:->", err)
 		return nil, err
 	}
 
