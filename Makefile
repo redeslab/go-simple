@@ -26,13 +26,16 @@ endif
 
 BINDIR=$(INCLUDE)/bin
 
-all: pbs build
+all: pbs sol build
 
 build:
 	GOOS=$(OS) GOARCH=amd64 $(GOBUILD) -o $(BINDIR)/$(NAME)
 
 pbs:
 	cd pbs/ && $(MAKE)
+
+sol:
+	cd contract/ && $(MAKE)
 
 resdir := ./webserver
 webfs:
