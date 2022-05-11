@@ -3,9 +3,9 @@ package main
 import (
 	"fmt"
 	com "github.com/redeslab/go-miner-pool/common"
-	"github.com/redeslab/go-miner/node"
 	"github.com/redeslab/go-miner/pbs"
 	"github.com/redeslab/go-miner/webserver"
+	"github.com/redeslab/go-simple/node"
 	"github.com/spf13/cobra"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
@@ -32,8 +32,8 @@ var param struct {
 }
 
 var rootCmd = &cobra.Command{
-	Use:   "HOP",
-	Short: "HOP",
+	Use:   "Simple",
+	Short: "Simple",
 	Long:  `usage description`,
 	Run:   mainRun,
 }
@@ -41,7 +41,7 @@ var rootCmd = &cobra.Command{
 func init() {
 
 	rootCmd.Flags().BoolVarP(&param.version, "version",
-		"v", false, "HOP version")
+		"v", false, "Simple version")
 
 	rootCmd.Flags().StringVarP(&param.password, "password",
 		"p", "", "Password to unlock miner")
@@ -70,7 +70,7 @@ func main() {
 func mainRun(_ *cobra.Command, _ []string) {
 
 	if param.version {
-		fmt.Println("Hop version: ", node.HopVersion)
+		fmt.Println("Simple version: ", node.Version)
 		return
 	}
 

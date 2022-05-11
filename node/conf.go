@@ -35,7 +35,7 @@ type PathConf struct {
 	WebUserInfo     string
 }
 
-var HopVersion string = "1.1.6"
+var Version = "1.0.1"
 
 var accessPubKeyLock sync.Mutex
 
