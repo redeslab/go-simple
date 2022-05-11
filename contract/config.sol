@@ -78,4 +78,8 @@ contract Config is owned{
         servers[idx].host = host;
         emit ServerChanged(addr, host, 2);
     }
+
+    function ServerList() public view returns(ServerItem[] memory){
+        return servers;
+    }
 }
