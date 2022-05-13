@@ -10,7 +10,7 @@ import (
 const (
 	AccPrefix       = "HO"
 	AccIDLen        = 40
-	SocketPortInit  = 43000
+	SocketPortInit  = 23000
 	SocketPortRange = 8888
 )
 
