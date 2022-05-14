@@ -1,7 +1,7 @@
 package node
 
 import (
-	"github.com/redeslab/go-miner-pool/account"
+	"github.com/redeslab/go-simple/account"
 	"sync"
 )
 
