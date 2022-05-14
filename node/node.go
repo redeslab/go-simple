@@ -630,11 +630,11 @@ func (n *Node) checkVersion() error {
 		return err
 	}
 
-	if extd.Version == HopVersion && extd.PoolAddr == n.poolAddr.String() {
+	if extd.Version == Version && extd.PoolAddr == n.poolAddr.String() {
 		return nil
 	}
 
-	extd.Version = HopVersion
+	extd.Version = Version
 	extd.PoolAddr = n.poolAddr.String()
 
 	req := &dbSrv.RegRequest{

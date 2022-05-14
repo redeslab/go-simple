@@ -82,4 +82,13 @@ contract Config is owned{
     function ServerList() public view returns(ServerItem[] memory){
         return servers;
     }
+
+    function QueryByOne(string memory addr) public view returns (string memory){
+        uint idx = sIdx[addr];
+        if (idx == 0){
+            return "";
+        }
+
+        return servers[idx].host;
+    }
 }

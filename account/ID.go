@@ -8,7 +8,7 @@ import (
 )
 
 const (
-	AccPrefix       = "HO"
+	AccPrefix       = "SV"
 	AccIDLen        = 40
 	SocketPortInit  = 23000
 	SocketPortRange = 8888
