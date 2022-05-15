@@ -24,7 +24,7 @@ var ShowAddrCmd = &cobra.Command{
 func init() {
 	ShowCmd.AddCommand(ShowAddrCmd)
 	ShowAddrCmd.Flags().StringVarP(&param.path, "wallet.path",
-		"p", "", "Simple show -p [Wallet Path]")
+		"w", "", "Simple show -w [Wallet Path]")
 	ShowAddrCmd.Flags().StringVarP(&param.password, "password", "p", "", "Password to create account.")
 
 }

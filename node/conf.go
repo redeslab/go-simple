@@ -67,6 +67,10 @@ func InitDefaultConfig() *Config {
 }
 func initConfig(confPath string) {
 	base := util.BaseDir()
+	_, exist := util.FileExists(base)
+	if !exist {
+		panic("init service first please!")
+	}
 	if len(confPath) == 0 {
 		confPath = filepath.Join(base, string(filepath.Separator), ConfFile)
 	}
