@@ -3,7 +3,6 @@ package pbs
 import (
 	"fmt"
 	"github.com/ethereum/go-ethereum/common/hexutil"
-	"github.com/redeslab/go-simple/account"
 	"github.com/redeslab/go-simple/node"
 	"github.com/spf13/cobra"
 )
@@ -35,12 +34,8 @@ func showAddr(_ *cobra.Command, _ []string) {
 	}
 	node.InitNodeConfig(param.password, param.path)
 
-	w, err := account.LoadWallet(param.path)
-	if err != nil {
-		fmt.Println(err)
-	}
-	fmt.Println(w.MainAddress().String())
-	fmt.Println(w.SubAddress().String())
-	fmt.Println(hexutil.Encode(w.SubAddress().ToPubKey()))
+	fmt.Println(node.WInst().MainAddress().String())
+	fmt.Println(node.WInst().SubAddress().String())
+	fmt.Println(hexutil.Encode(node.WInst().SubAddress().ToPubKey()))
 
 }

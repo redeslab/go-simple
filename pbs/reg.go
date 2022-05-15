@@ -28,12 +28,19 @@ func init() {
 
 func configReg(_ *cobra.Command, _ []string) {
 
+	if len(param.priKey) == 0 || len(param.password) == 0 || len(param.minerIP) == 0 {
+		fmt.Println("parameter needed: [ETH Admin Key], [Node Password], [Node Host]")
+		return
+	}
+
 	pk, err := hex.DecodeString(param.priKey)
 	if err != nil {
 		fmt.Println("======>>>invalid contract private key", err)
 		return
 	}
 	ethPk := cryptoEth.ToECDSAUnsafe(pk)
+
+	node.InitNodeConfig(param.password, "")
 	tx, err := ethapi.RegNewMiner(node.WInst().SubAddress().String(), param.minerIP, ethPk)
 	if err != nil {
 		fmt.Println("======> RegNewMiner err:", err)

@@ -49,5 +49,5 @@ func initMiner(_ *cobra.Command, _ []string) {
 	if err := w.SaveToPath(defaultCfg.WalletPath); err != nil {
 		panic(err)
 	}
-	fmt.Printf("======>>>Create wallet success! main[%s] su[%s]\n", w.MainAddress(), w.SubAddress())
+	fmt.Printf("======>>>Create wallet success!\nmain=>[%s] \nsub=>[%s]\n<<<======\n", w.MainAddress(), w.SubAddress())
 }

@@ -24,6 +24,7 @@ const (
 	WalletFile        = "wallet.json"
 	LogFile           = "log.svn"
 	ConfFile          = "conf.svn"
+	DBDir             = "dabtabse"
 	ConnTimeOut       = 5
 	ConnectionBufSize = 65535
 )
@@ -51,6 +52,7 @@ func InitDefaultConfig() *Config {
 	cfg := &Config{}
 	cfg.WalletPath = filepath.Join(base, string(filepath.Separator), WalletFile)
 	cfg.LogPath = filepath.Join(base, string(filepath.Separator), LogFile)
+	cfg.DBPath = filepath.Join(base, string(filepath.Separator), DBDir)
 	cfg.TimeOut = ConnTimeOut * time.Second
 	confPath := filepath.Join(base, string(filepath.Separator), ConfFile)
 
