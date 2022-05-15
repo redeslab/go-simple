@@ -6,13 +6,11 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/redeslab/go-miner-pool/account"
-	"github.com/redeslab/go-miner-pool/microchain"
 	"github.com/redeslab/go-miner-pool/network"
 )
 
 const (
-	MsgDeliverMicroTx int = iota
-	MsgSyncMicroTx
+	_ = iota
 	MsgPingTest
 )
 
@@ -62,17 +60,15 @@ func (pt *PingTest) String() string {
 }
 
 type MsgReq struct {
-	Typ int                 `json:"typ"`
-	SMT *SyncMicroTx        `json:"smt,omitempty"`
-	TX  *microchain.MicroTX `json:"tx,omitempty"`
-	PT  *PingTest           `json:"pt,omitempty"`
+	Typ int          `json:"typ"`
+	SMT *SyncMicroTx `json:"smt,omitempty"`
+	PT  *PingTest    `json:"pt,omitempty"`
 }
 
 func (mr *MsgReq) String() string {
-	return fmt.Sprintf("type :%d\r\nSyncMicroTx: %s\r\nMicroTx: %sPingTest:%s\r\n",
+	return fmt.Sprintf("type :%d\r\nSyncMicroTx: %sPingTest:%s\r\n",
 		mr.Typ,
 		mr.SMT.String(),
-		mr.TX.String(),
 		mr.PT.String())
 }
 

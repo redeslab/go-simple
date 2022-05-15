@@ -10,7 +10,6 @@ require (
 	github.com/google/uuid v1.3.0
 	github.com/op/go-logging v0.0.0-20160315200505-970db520ece7
 	github.com/redeslab/BAS v1.3.0
-	github.com/redeslab/go-miner v1.2.9
 	github.com/redeslab/go-miner-pool v1.3.4
 	github.com/redeslab/pirate_contract v1.3.1
 	github.com/spf13/cobra v1.3.0

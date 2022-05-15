@@ -1,21 +1,10 @@
 syntax = "proto3";
 
 package pbs;
-option go_package = "github.com/redeslab/go-miner/pbs;pbs";
+option go_package = "github.com/redeslab/go-simple/pbs;pbs";
 
 service CmdService {
-    rpc ShowUserCounter (UserCounterReq) returns (CounterResult) {}
     rpc SetLogLevel (LogLevel) returns (CommonResponse) {}
-    rpc ShowAlluser (EmptyReq) returns (CommonResponse) {}
-    rpc ShowAllReceipt(ReceiptReq) returns (CommonResponse) {}
-    rpc ShowOneUser (UserInfoReq) returns (CommonResponse) {}
-    rpc ShowOneReceipt (ReceiptOneReq) returns (CommonResponse) {}
-    rpc ShowLatestReceipt (ReceiptReq) returns (CommonResponse) {}
-
-    rpc ShowAccessAddr (EmptyRequest) returns (CommonResponse) {}
-    rpc ShowWebPort  (EmptyRequest) returns (CommonResponse) {}
-    rpc AccessAddressMgmt (AccessAddress) returns (CommonResponse) {}
-    rpc WebPortSet (WebPort) returns (CommonResponse) {}
 }
 
 message EmptyRequest {

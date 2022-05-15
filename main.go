@@ -2,16 +2,9 @@ package main
 
 import (
 	"fmt"
-	com "github.com/redeslab/go-miner-pool/common"
-	"github.com/redeslab/go-miner/pbs"
-	"github.com/redeslab/go-miner/webserver"
 	"github.com/redeslab/go-simple/node"
+	"github.com/redeslab/go-simple/pbs"
 	"github.com/spf13/cobra"
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/reflection"
-	"io/ioutil"
-	"log"
-	"net"
 	"os"
 	"os/signal"
 	"strconv"
@@ -23,11 +16,7 @@ var param struct {
 	version  bool
 	CMDPort  string
 	password string
-	minerIP  string
-	user     string
-	priKey   string
-	report   int
-	credit   string
+	path     string
 }
 
 var rootCmd = &cobra.Command{
@@ -45,15 +34,16 @@ func init() {
 	rootCmd.Flags().StringVarP(&param.password, "password",
 		"p", "", "Password to unlock miner")
 
+	rootCmd.Flags().StringVarP(&param.path, "wallet.path",
+		"w", "", "wallet path used in this miner")
 	rootCmd.Flags().StringVarP(&param.CMDPort, "cmdPort",
 		"c", "42776", "Cmd service port")
 
 	rootCmd.Flags().BoolVarP(&param.debug, "debug", "d", false, "true: ropsten, false: mainnet")
 
-	rootCmd.AddCommand(InitCmd)
-	rootCmd.AddCommand(RegCmd)
-	rootCmd.AddCommand(ShowCmd)
-	rootCmd.AddCommand(WebAccessAddrCmd)
+	rootCmd.AddCommand(pbs.InitCmd)
+	rootCmd.AddCommand(pbs.RegCmd)
+	rootCmd.AddCommand(pbs.ShowCmd)
 }
 
 func main() {
@@ -64,35 +54,14 @@ func main() {
 }
 
 func mainRun(_ *cobra.Command, _ []string) {
-
 	if param.version {
 		fmt.Println("Simple version: ", node.Version)
 		return
 	}
 
-	networkid := com.MainNetworkId
-	if param.debug {
-		networkid = com.RopstenNetworkId
-	}
-
-	log.Println("start at ", networkid, "network.....")
-
-	node.InitMinerNode(param.password, param.CMDPort, networkid)
-	node.InitEthConfig()
-
-	n := node.SrvNode()
-	com.NewThreadWithID("[TCP Service Thread]", n.Mining, func(err interface{}) {
-		panic(err)
-	}).Start()
-
-	com.NewThreadWithID("[Cmd Service Thread]", func(c chan struct{}) {
-		StartCmdService()
-	}, func(err interface{}) {
-		panic(err)
-	}).Start()
-
-	go webserver.StartWebDaemon()
-
+	node.InitNodeConfig(param.password, param.path)
+	node.Inst().StartUp()
+	go pbs.StartCmdService(param.CMDPort)
 	done := make(chan bool, 1)
 	go waitSignal(done)
 	<-done
@@ -101,9 +70,6 @@ func mainRun(_ *cobra.Command, _ []string) {
 func waitSignal(done chan bool) {
 	pid := strconv.Itoa(os.Getpid())
 	fmt.Printf("\n>>>>>>>>>>miner start at pid(%s)<<<<<<<<<<\n", pid)
-	if err := ioutil.WriteFile(node.PathSetting.PidPath, []byte(pid), 0644); err != nil {
-		fmt.Print("failed to write running pid", err)
-	}
 
 	sigCh := make(chan os.Signal, 1)
 	signal.Notify(sigCh,
@@ -113,40 +79,7 @@ func waitSignal(done chan bool) {
 
 	sig := <-sigCh
 
-	node.SrvNode().Stop()
-	webserver.StopWebDaemon()
+	node.Inst().Stop()
 	fmt.Printf("\n>>>>>>>>>>process finished(%s)<<<<<<<<<<\n", sig)
-
 	done <- true
-}
-
-type cmdService struct{}
-
-func StartCmdService() {
-	address := net.JoinHostPort("127.0.0.1", node.CMDServicePort)
-	l, err := net.Listen("tcp", address)
-	if err != nil {
-		panic(err)
-	}
-
-	cmdServer := grpc.NewServer()
-
-	pbs.RegisterCmdServiceServer(cmdServer, &cmdService{})
-
-	reflection.Register(cmdServer)
-	if err := cmdServer.Serve(l); err != nil {
-		panic(err)
-	}
-}
-
-func DialToCmdService() pbs.CmdServiceClient {
-	var address = "127.0.0.1:" + node.CMDServicePort
-	conn, err := grpc.Dial(address, grpc.WithInsecure())
-	if err != nil {
-		panic(err)
-	}
-
-	client := pbs.NewCmdServiceClient(conn)
-
-	return client
 }

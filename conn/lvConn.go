@@ -3,7 +3,7 @@ package network
 import (
 	"errors"
 	"fmt"
-	"github.com/redeslab/go-miner-pool/common"
+	"github.com/redeslab/go-simple/util"
 	"io"
 	"net"
 )
@@ -26,7 +26,7 @@ func (lc *LVConn) Read(buf []byte) (n int, err error) {
 		return
 	}
 
-	dataLen := common.ByteToUint(lenBuf)
+	dataLen := util.ByteToUint(lenBuf)
 	if dataLen == 0 || dataLen > BuffSize {
 		err = fmt.Errorf("wrong buffer size:%d", dataLen)
 		return
@@ -47,7 +47,7 @@ func (lc *LVConn) Write(buf []byte) (n int, err error) {
 		return
 	}
 	dataLen := uint32(len(buf))
-	headerBuf := common.UintToByte(dataLen)
+	headerBuf := util.UintToByte(dataLen)
 
 	n, err = lc.Conn.Write(headerBuf)
 	if err != nil {
