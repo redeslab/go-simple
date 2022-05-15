@@ -6,7 +6,7 @@ import (
 	"crypto/sha512"
 	"fmt"
 	"github.com/btcsuite/btcutil/base58"
-	"github.com/redeslab/go-miner-pool/account/edwards25519"
+	"github.com/redeslab/go-simple/account/edwards25519"
 	"golang.org/x/crypto/curve25519"
 	"golang.org/x/crypto/scrypt"
 )

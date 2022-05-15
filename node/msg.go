@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
-	"github.com/redeslab/go-miner-pool/account"
-	"github.com/redeslab/go-miner-pool/network"
+	"github.com/redeslab/go-simple/account"
+	"github.com/redeslab/go-simple/conn"
 )
 
 const (
