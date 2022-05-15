@@ -24,9 +24,8 @@ var param struct {
 	CMDPort  string
 	password string
 	minerIP  string
-	basIP    string
 	user     string
-	location string
+	priKey   string
 	report   int
 	credit   string
 }
@@ -49,13 +48,10 @@ func init() {
 	rootCmd.Flags().StringVarP(&param.CMDPort, "cmdPort",
 		"c", "42776", "Cmd service port")
 
-	//TODO:: mv to config file
-	rootCmd.Flags().StringVarP(&node.MinerSetting.BAS, "basIP",
-		"b", "167.179.75.39", "Bas IP")
 	rootCmd.Flags().BoolVarP(&param.debug, "debug", "d", false, "true: ropsten, false: mainnet")
 
 	rootCmd.AddCommand(InitCmd)
-	rootCmd.AddCommand(BasCmd)
+	rootCmd.AddCommand(RegCmd)
 	rootCmd.AddCommand(ShowCmd)
 	rootCmd.AddCommand(WebAccessAddrCmd)
 }
@@ -83,8 +79,6 @@ func mainRun(_ *cobra.Command, _ []string) {
 
 	node.InitMinerNode(param.password, param.CMDPort, networkid)
 	node.InitEthConfig()
-
-	fmt.Println("eth config: ====>", node.MinerSetting.String())
 
 	n := node.SrvNode()
 	com.NewThreadWithID("[TCP Service Thread]", n.Mining, func(err interface{}) {

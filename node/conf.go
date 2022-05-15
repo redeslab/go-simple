@@ -40,8 +40,6 @@ var Version = "1.0.1"
 var accessPubKeyLock sync.Mutex
 
 type SettingConf struct {
-	BAS string
-	*com.EthereumConfig
 	WebPort      int
 	AccessPubKey []string
 }

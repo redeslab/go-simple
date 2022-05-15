@@ -4,7 +4,7 @@ GOBUILD=CGO_ENABLED=0 go build -ldflags '-w -s'
 
 PLATFORM := $(shell uname -o)
 
-NAME := HOP.exe
+NAME := Simple.exe
 OS := windows
 
 ifeq ($(PLATFORM), Msys)
@@ -13,7 +13,7 @@ else ifeq ($(PLATFORM), Cygwin)
     INCLUDE := ${shell echo "$(GOPATH)"|sed -e 's/\\/\//g'}
 else
 	INCLUDE := $(GOPATH)
-	NAME=HOP
+	NAME=Simple
 	OS=linux
 endif
 
