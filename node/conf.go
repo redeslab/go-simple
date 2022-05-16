@@ -26,7 +26,7 @@ const (
 	ConfFile          = "conf.svn"
 	DBDir             = "dabtabse"
 	ConnTimeOut       = 5
-	ConnectionBufSize = 65535
+	ConnectionBufSize = 1 << 20
 )
 
 var _conf = &Config{}
