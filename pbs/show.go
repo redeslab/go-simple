@@ -32,7 +32,7 @@ func showAddr(_ *cobra.Command, _ []string) {
 		print("======>>> wallet password needed")
 		return
 	}
-	node.InitNodeConfig(param.password, param.path)
+	node.PrepareConfig(param.password, param.path)
 
 	fmt.Println(node.WInst().MainAddress().String())
 	fmt.Println(node.WInst().SubAddress().String())

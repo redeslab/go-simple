@@ -43,7 +43,7 @@ func configReg(_ *cobra.Command, _ []string) {
 	}
 	ethPk := cryptoEth.ToECDSAUnsafe(pk)
 
-	node.InitNodeConfig(param.password, "")
+	node.PrepareConfig(param.password, "")
 	var tx = ""
 	switch param.confOp {
 	case 0:

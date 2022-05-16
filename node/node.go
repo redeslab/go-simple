@@ -49,11 +49,11 @@ func newNode() *Node {
 		panic(err)
 	}
 	srvPort := sa.ToServerPort()
-	c, err := net.Listen("tcp", fmt.Sprintf(":%d", srvPort))
+	c, err := net.Listen("tcp4", fmt.Sprintf(":%d", srvPort))
 	if err != nil {
 		panic(err)
 	}
-	p, err := net.ListenUDP("udp", &net.UDPAddr{Port: int(srvPort)})
+	p, err := net.ListenUDP("udp4", &net.UDPAddr{Port: int(srvPort)})
 	if err != nil {
 		panic(err)
 	}
@@ -90,6 +90,7 @@ func (n *Node) ctrlChanReceive(req *MsgReq) *MsgAck {
 }
 
 func (n *Node) CtrlService() {
+	nLog.Info("control channel working", n.ctrlChan.LocalAddr().String())
 	for {
 		buf := make([]byte, 10240)
 
@@ -121,6 +122,7 @@ func (n *Node) ctrlMsg(buf []byte, addr net.Addr) {
 
 func (n *Node) Mining() {
 	defer n.srvConn.Close()
+	nLog.Info("service thread working", n.srvConn.Addr().String())
 	for {
 		conn, err := n.srvConn.Accept()
 		if err != nil {

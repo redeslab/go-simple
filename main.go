@@ -59,7 +59,7 @@ func mainRun(_ *cobra.Command, _ []string) {
 		return
 	}
 
-	node.InitNodeConfig(param.password, param.path)
+	node.PrepareConfig(param.password, param.path)
 	node.Inst().StartUp()
 	go pbs.StartCmdService(param.CMDPort)
 	done := make(chan bool, 1)

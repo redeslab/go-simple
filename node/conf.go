@@ -83,9 +83,10 @@ func initConfig(confPath string) {
 	if err := json.Unmarshal(confData, _conf); err != nil {
 		panic(err)
 	}
+	fmt.Println(_conf.String())
 }
 
-func InitNodeConfig(auth, confPath string) {
+func PrepareConfig(auth, confPath string) {
 
 	initConfig(confPath)
 
@@ -103,6 +104,9 @@ func InitNodeConfig(auth, confPath string) {
 	if err := WInst().Open(auth); err != nil {
 		panic(err)
 	}
+	fmt.Println("======>>>wallet open success")
+	fmt.Println("======>>>main address:=>", WInst().MainAddress().String())
+	fmt.Println("======>>>sub address:=>", WInst().SubAddress().String())
 }
 
 func ChangeConnCloseTimeOut(toInSeconds int) {

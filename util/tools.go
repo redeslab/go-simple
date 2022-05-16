@@ -112,7 +112,7 @@ func InitLog(logPath string) {
 	formattedCmdBackend := logging.NewBackendFormatter(cmdBackend, cmdFormat)
 
 	logging.SetBackend(leveledFileBackend, formattedCmdBackend)
-	fmt.Println("log init success")
+	fmt.Println("======>>>log init success")
 }
 
 func BaseDir() string {
