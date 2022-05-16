@@ -18,7 +18,7 @@ var param struct {
 	confOp   int8
 }
 
-var CMDServicePort = "42776"
+var CMDServicePort = "32776"
 
 func StartCmdService(port string) {
 	CMDServicePort = port

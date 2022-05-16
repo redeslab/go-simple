@@ -37,7 +37,7 @@ func init() {
 	rootCmd.Flags().StringVarP(&param.path, "wallet.path",
 		"w", "", "wallet path used in this miner")
 	rootCmd.Flags().StringVarP(&param.CMDPort, "cmdPort",
-		"c", "42776", "Cmd service port")
+		"c", "32776", "Cmd service port")
 
 	rootCmd.Flags().BoolVarP(&param.debug, "debug", "d", false, "true: ropsten, false: mainnet")
 
