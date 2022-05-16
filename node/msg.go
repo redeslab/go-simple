@@ -59,28 +59,15 @@ func (pt *PingTest) String() string {
 	return fmt.Sprintf("PayLoad: %s", pt.PayLoad)
 }
 
-type MsgReq struct {
-	Typ int          `json:"typ"`
-	SMT *SyncMicroTx `json:"smt,omitempty"`
-	PT  *PingTest    `json:"pt,omitempty"`
+type CtrlMsg struct {
+	Typ int       `json:"typ"`
+	PT  *PingTest `json:"pt,omitempty"`
 }
 
-func (mr *MsgReq) String() string {
-	return fmt.Sprintf("type :%d\r\nSyncMicroTx: %sPingTest:%s\r\n",
+func (mr *CtrlMsg) String() string {
+	return fmt.Sprintf("type :%d nPingTest:%s\r\n",
 		mr.Typ,
-		mr.SMT.String(),
 		mr.PT.String())
-}
-
-type SyncMicroTx struct {
-	User common.Address `json:"user"`
-}
-
-func (sm *SyncMicroTx) String() string {
-	if sm == nil {
-		return "SyncMicroTx is nil"
-	}
-	return fmt.Sprintf("User Address:%s", sm.User.String())
 }
 
 type MsgAck struct {

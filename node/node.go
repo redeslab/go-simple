@@ -74,7 +74,7 @@ func (n *Node) StartUp() {
 	go n.CtrlService()
 }
 
-func (n *Node) ctrlChanReceive(req *MsgReq) *MsgAck {
+func (n *Node) ctrlChanReceive(req *CtrlMsg) *MsgAck {
 	ack := &MsgAck{}
 	ack.Typ = req.Typ
 	ack.Msg = "failure"
@@ -85,6 +85,9 @@ func (n *Node) ctrlChanReceive(req *MsgReq) *MsgAck {
 	case MsgPingTest:
 		ack.Code = 0
 		ack.Msg = "success"
+	default:
+		ack.Code = -1
+		ack.Msg = "unknown message type"
 	}
 	return ack
 }
@@ -104,13 +107,12 @@ func (n *Node) CtrlService() {
 }
 
 func (n *Node) ctrlMsg(buf []byte, addr net.Addr) {
-	req := &MsgReq{}
+	req := &CtrlMsg{}
 	err := json.Unmarshal(buf, req)
 	if err != nil {
 		nLog.Warning("control channel bad request ", err)
 		return
 	}
-	nLog.Debug("CtrlService raw data:", string(buf))
 	data := n.ctrlChanReceive(req)
 	if j, err := json.Marshal(*data); err != nil {
 		nLog.Debug("Marshal ctrlMsg data failed", data.String())
