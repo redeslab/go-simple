@@ -15,6 +15,7 @@ var param struct {
 	user     string
 	priKey   string
 	path     string
+	confOp   int8
 }
 
 var CMDServicePort = "42776"

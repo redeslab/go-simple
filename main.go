@@ -42,7 +42,7 @@ func init() {
 	rootCmd.Flags().BoolVarP(&param.debug, "debug", "d", false, "true: ropsten, false: mainnet")
 
 	rootCmd.AddCommand(pbs.InitCmd)
-	rootCmd.AddCommand(pbs.RegCmd)
+	rootCmd.AddCommand(pbs.ConfCmd)
 	rootCmd.AddCommand(pbs.ShowCmd)
 }
 

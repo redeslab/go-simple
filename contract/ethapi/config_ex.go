@@ -87,3 +87,28 @@ func RegNewMiner(addr, host string, key *ecdsa.PrivateKey) (string, error) {
 	}
 	return tx.Hash().String(), nil
 }
+func UpdateNewMiner(addr, host string, key *ecdsa.PrivateKey) (string, error) {
+	sysConf, option, err := ethApi(key)
+	if err != nil {
+		return "", err
+	}
+
+	tx, err := sysConf.ChangeServer(option, addr, host)
+	if err != nil {
+		return "", err
+	}
+	return tx.Hash().String(), nil
+}
+
+func DelNewMiner(addr, host string, key *ecdsa.PrivateKey) (string, error) {
+	sysConf, option, err := ethApi(key)
+	if err != nil {
+		return "", err
+	}
+
+	tx, err := sysConf.RemoveServer(option, addr)
+	if err != nil {
+		return "", err
+	}
+	return tx.Hash().String(), nil
+}
