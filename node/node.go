@@ -8,7 +8,7 @@ import (
 	"github.com/btcsuite/goleveldb/leveldb/opt"
 	"github.com/op/go-logging"
 	"github.com/redeslab/go-simple/account"
-	"github.com/redeslab/go-simple/conn"
+	"github.com/redeslab/go-simple/network"
 	"net"
 	"sync"
 	"time"
@@ -141,7 +141,7 @@ func (n *Node) Stop() {
 }
 
 func (n *Node) newWorker(conn net.Conn) {
-	nLog.Debug("======>>>new conn:", conn.RemoteAddr().String())
+	nLog.Debug("======>>>new network:", conn.RemoteAddr().String())
 	_ = conn.(*net.TCPConn).SetKeepAlive(true)
 	defer conn.SetDeadline(time.Now().Add(_conf.TimeOut))
 

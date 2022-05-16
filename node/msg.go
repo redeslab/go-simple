@@ -3,10 +3,9 @@ package node
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/redeslab/go-simple/account"
-	"github.com/redeslab/go-simple/conn"
+	"github.com/redeslab/go-simple/network"
 )
 
 const (
@@ -14,15 +13,9 @@ const (
 	MsgPingTest
 )
 
-type SetupData struct {
-	IV       network.Salt
-	MainAddr common.Address
-	SubAddr  account.ID
-}
-
 type SetupReq struct {
-	Sig []byte
-	*SetupData
+	IV      network.Salt
+	SubAddr account.ID
 }
 
 type ProbeReq struct {
@@ -30,21 +23,12 @@ type ProbeReq struct {
 	MaxPacketSize int    `json:"MaxPacketSize,omitempty"`
 }
 
-func (sr *SetupReq) Verify() bool {
-	return account.VerifyJsonSig(sr.MainAddr, sr.Sig, sr.SetupData)
-}
-
 func (sr *SetupReq) String() string {
-
 	return fmt.Sprintf("\n@@@@@@@@@@@@@@@@@@@[Setup Request]@@@@@@@@@@@@@@@@@"+
-		"\nSig:\t%s"+
 		"\nIV:\t%s"+
-		"\nMainAddr:\t%s"+
 		"\nSubAddr:\t%s"+
 		"\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@",
-		hexutil.Encode(sr.Sig),
 		hexutil.Encode(sr.IV[:]),
-		sr.MainAddr.String(),
 		sr.SubAddr.String())
 }
 
