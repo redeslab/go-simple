@@ -32,11 +32,14 @@ func (lc *LVConn) Read(buf []byte) (n int, err error) {
 		return
 	}
 
+	if len(buf) < int(dataLen) {
+		return 0, fmt.Errorf("buffer is too small(buf:%d, data:%d)", len(buf), dataLen)
+	}
+
 	buf = buf[:dataLen]
 	if n, err = io.ReadFull(lc.Conn, buf); err != nil {
 		return
 	}
-	//fmt.Printf("LVConn read [%d]:%02x", dataLen, buf[:dataLen])
 	return int(dataLen), err
 }
 

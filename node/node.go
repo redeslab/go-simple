@@ -190,7 +190,7 @@ func (n *Node) newWorker(conn net.Conn) {
 		aesConn.RemoteAddr().String(),
 		peerMaxPacketSize)
 
-	go func() { //TODO::
+	go func() {
 		buffer := make([]byte, peerMaxPacketSize)
 		for {
 			no, err := aesConn.Read(buffer)
