@@ -7,9 +7,12 @@ import (
 	"github.com/op/go-logging"
 	"golang.org/x/crypto/ssh/terminal"
 	"log"
+	"math/big"
+	"net"
 	"os"
 	"os/user"
 	"path/filepath"
+	"syscall"
 	"time"
 )
 
@@ -122,4 +125,32 @@ func BaseDir() string {
 	}
 	baseDir := filepath.Join(usr.HomeDir, string(filepath.Separator), DefaultBaseDir)
 	return baseDir
+}
+
+func BigIntSub(x, y *big.Int) *big.Int {
+	if x == nil {
+		x = &big.Int{}
+	}
+	if y == nil {
+		y = &big.Int{}
+	}
+
+	b := &big.Int{}
+	return b.Sub(x, y)
+}
+
+type ConnSaver func(fd uintptr)
+
+func GetSavedConn(rAddr string, connSaver ConnSaver, timeOut time.Duration) (net.Conn, error) {
+	d := &net.Dialer{
+		Timeout: timeOut,
+		Control: func(network, address string, c syscall.RawConn) error {
+			if connSaver != nil {
+				return c.Control(connSaver)
+			}
+			return nil
+		},
+	}
+
+	return d.Dial("tcp", rAddr)
 }
