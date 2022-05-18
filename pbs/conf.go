@@ -27,9 +27,30 @@ func init() {
 
 	ConfCmd.Flags().Int8VarP(&param.confOp, "op", "o", 0, "config operations 0:reg, 1:update, 2:delete")
 
+	ConfCmd.Flags().BoolVarP(&param.one, "one", "n", false, "one one miner's config")
+	ConfCmd.Flags().StringVarP(&param.id, "id",
+		"i", "", "Simple conf -n -i [MINER's ADDR]")
+	ConfCmd.Flags().BoolVarP(&param.all, "all", "a", false, "one all miner's config")
 }
 
 func configReg(_ *cobra.Command, _ []string) {
+
+	if param.all {
+		data := ethapi.SyncServerList()
+		if len(data) == 0 {
+			fmt.Println("no valid config")
+		}
+		for idx, datum := range data {
+			fmt.Println(idx, datum.Addr, datum.Host)
+		}
+		return
+	}
+
+	if param.one {
+		data := ethapi.RefreshHostByAddr(param.id)
+		fmt.Println(data)
+		return
+	}
 
 	if len(param.priKey) == 0 || len(param.password) == 0 {
 		fmt.Println("parameter needed: [ETH Admin Key], [Node Password]")
@@ -66,8 +87,8 @@ func configReg(_ *cobra.Command, _ []string) {
 
 	}
 	if err != nil {
-		fmt.Println("======> RegNewMiner err:", err)
+		fmt.Println("======> miner operation err:", err)
 		return
 	}
-	fmt.Println("======>>> reg new miner success tx=>", tx)
+	fmt.Println("======>>>miner operation success tx=>", tx)
 }

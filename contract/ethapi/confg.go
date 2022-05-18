@@ -36,7 +36,7 @@ type ConfigServerItem struct {
 
 // ChainConfigMetaData contains all meta data concerning the ChainConfig contract.
 var ChainConfigMetaData = &bind.MetaData{
-	ABI: "[{\"inputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"name\":\"ServerChanged\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"Administrators\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"addr\",\"type\":\"string\"}],\"name\":\"QueryByOne\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"ServerList\",\"outputs\":[{\"components\":[{\"internalType\":\"string\",\"name\":\"addr\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"host\",\"type\":\"string\"}],\"internalType\":\"structConfig.ServerItem[]\",\"name\":\"\",\"type\":\"tuple[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"admin\",\"type\":\"address\"}],\"name\":\"addAdmin\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"addr\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"host\",\"type\":\"string\"}],\"name\":\"addServer\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"addr\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"host\",\"type\":\"string\"}],\"name\":\"changeServer\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"admin\",\"type\":\"address\"}],\"name\":\"removeAdmin\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"addr\",\"type\":\"string\"}],\"name\":\"removeServer\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"name\":\"sIdx\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"servers\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"addr\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"host\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"transferOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
+	ABI: "[{\"inputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"name\":\"ServerChanged\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"Administrators\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"AdvertiseAddr\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"addr\",\"type\":\"string\"}],\"name\":\"QueryByOne\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"ServerList\",\"outputs\":[{\"components\":[{\"internalType\":\"string\",\"name\":\"addr\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"host\",\"type\":\"string\"}],\"internalType\":\"structConfig.ServerItem[]\",\"name\":\"\",\"type\":\"tuple[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"admin\",\"type\":\"address\"}],\"name\":\"addAdmin\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"addr\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"host\",\"type\":\"string\"}],\"name\":\"addServer\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"addr\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"host\",\"type\":\"string\"}],\"name\":\"changeServer\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"admin\",\"type\":\"address\"}],\"name\":\"removeAdmin\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"addr\",\"type\":\"string\"}],\"name\":\"removeServer\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"name\":\"sIdx\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"servers\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"addr\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"host\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"addr\",\"type\":\"address\"}],\"name\":\"setAdvertisAddr\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"transferOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
 }
 
 // ChainConfigABI is the input ABI used to generate the binding from.
@@ -214,6 +214,37 @@ func (_ChainConfig *ChainConfigSession) Administrators(arg0 common.Address) (boo
 // Solidity: function Administrators(address ) view returns(bool)
 func (_ChainConfig *ChainConfigCallerSession) Administrators(arg0 common.Address) (bool, error) {
 	return _ChainConfig.Contract.Administrators(&_ChainConfig.CallOpts, arg0)
+}
+
+// AdvertiseAddr is a free data retrieval call binding the contract method 0x06816e43.
+//
+// Solidity: function AdvertiseAddr() view returns(address)
+func (_ChainConfig *ChainConfigCaller) AdvertiseAddr(opts *bind.CallOpts) (common.Address, error) {
+	var out []interface{}
+	err := _ChainConfig.contract.Call(opts, &out, "AdvertiseAddr")
+
+	if err != nil {
+		return *new(common.Address), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(common.Address)).(*common.Address)
+
+	return out0, err
+
+}
+
+// AdvertiseAddr is a free data retrieval call binding the contract method 0x06816e43.
+//
+// Solidity: function AdvertiseAddr() view returns(address)
+func (_ChainConfig *ChainConfigSession) AdvertiseAddr() (common.Address, error) {
+	return _ChainConfig.Contract.AdvertiseAddr(&_ChainConfig.CallOpts)
+}
+
+// AdvertiseAddr is a free data retrieval call binding the contract method 0x06816e43.
+//
+// Solidity: function AdvertiseAddr() view returns(address)
+func (_ChainConfig *ChainConfigCallerSession) AdvertiseAddr() (common.Address, error) {
+	return _ChainConfig.Contract.AdvertiseAddr(&_ChainConfig.CallOpts)
 }
 
 // QueryByOne is a free data retrieval call binding the contract method 0x52e1281f.
@@ -488,6 +519,27 @@ func (_ChainConfig *ChainConfigSession) RemoveServer(addr string) (*types.Transa
 // Solidity: function removeServer(string addr) returns()
 func (_ChainConfig *ChainConfigTransactorSession) RemoveServer(addr string) (*types.Transaction, error) {
 	return _ChainConfig.Contract.RemoveServer(&_ChainConfig.TransactOpts, addr)
+}
+
+// SetAdvertisAddr is a paid mutator transaction binding the contract method 0xa8ae3090.
+//
+// Solidity: function setAdvertisAddr(address addr) returns()
+func (_ChainConfig *ChainConfigTransactor) SetAdvertisAddr(opts *bind.TransactOpts, addr common.Address) (*types.Transaction, error) {
+	return _ChainConfig.contract.Transact(opts, "setAdvertisAddr", addr)
+}
+
+// SetAdvertisAddr is a paid mutator transaction binding the contract method 0xa8ae3090.
+//
+// Solidity: function setAdvertisAddr(address addr) returns()
+func (_ChainConfig *ChainConfigSession) SetAdvertisAddr(addr common.Address) (*types.Transaction, error) {
+	return _ChainConfig.Contract.SetAdvertisAddr(&_ChainConfig.TransactOpts, addr)
+}
+
+// SetAdvertisAddr is a paid mutator transaction binding the contract method 0xa8ae3090.
+//
+// Solidity: function setAdvertisAddr(address addr) returns()
+func (_ChainConfig *ChainConfigTransactorSession) SetAdvertisAddr(addr common.Address) (*types.Transaction, error) {
+	return _ChainConfig.Contract.SetAdvertisAddr(&_ChainConfig.TransactOpts, addr)
 }
 
 // TransferOwnership is a paid mutator transaction binding the contract method 0xf2fde38b.

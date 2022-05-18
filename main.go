@@ -44,6 +44,7 @@ func init() {
 	rootCmd.AddCommand(pbs.InitCmd)
 	rootCmd.AddCommand(pbs.ConfCmd)
 	rootCmd.AddCommand(pbs.ShowCmd)
+	rootCmd.AddCommand(pbs.AdvertiseCmd)
 }
 
 func main() {

@@ -8,8 +8,8 @@ import (
 )
 
 var ShowCmd = &cobra.Command{
-	Use:   "show",
-	Short: "show miner's basic info",
+	Use:   "one",
+	Short: "one miner's basic info",
 	Long:  `TODO::.`,
 }
 
@@ -23,7 +23,7 @@ var ShowAddrCmd = &cobra.Command{
 func init() {
 	ShowCmd.AddCommand(ShowAddrCmd)
 	ShowAddrCmd.Flags().StringVarP(&param.path, "wallet.path",
-		"w", "", "Simple show -w [Wallet Path]")
+		"w", "", "Simple one -w [Wallet Path]")
 	ShowAddrCmd.Flags().StringVarP(&param.password, "password", "p", "", "Password to create account.")
 
 }
@@ -34,8 +34,8 @@ func showAddr(_ *cobra.Command, _ []string) {
 	}
 	node.PrepareConfig(param.password, param.path)
 
-	fmt.Println(node.WInst().MainAddress().String())
-	fmt.Println(node.WInst().SubAddress().String())
-	fmt.Println(hexutil.Encode(node.WInst().SubAddress().ToPubKey()))
+	fmt.Println("main address:", node.WInst().MainAddress().String())
+	fmt.Println("sub address:", node.WInst().SubAddress().String())
+	fmt.Println("sub public key hex:", hexutil.Encode(node.WInst().SubAddress().ToPubKey()))
 
 }

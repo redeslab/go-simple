@@ -24,7 +24,7 @@ contract Config is owned{
         string addr;
         string host;
     }
-
+    address public AdvertiseAddr;
     ServerItem[] public servers;
     mapping(string=>uint) public sIdx;
     mapping(address=>bool)public Administrators;
@@ -42,6 +42,10 @@ contract Config is owned{
     }
     function removeAdmin(address admin) public onlyOwner{
         delete  Administrators[admin];
+    }
+
+    function setAdvertisAddr(address addr) public onlyAdmin{
+        AdvertiseAddr = addr;
     }
 
     function addServer(string memory addr, string memory host)public onlyAdmin{

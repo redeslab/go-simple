@@ -10,12 +10,16 @@ import (
 type cmdService struct{}
 
 var param struct {
-	password string
-	minerIP  string
-	user     string
-	priKey   string
-	path     string
-	confOp   int8
+	password     string
+	minerIP      string
+	user         string
+	priKey       string
+	path         string
+	confOp       int8
+	one          bool
+	all          bool
+	id           string
+	contractAddr string
 }
 
 var CMDServicePort = "12776"

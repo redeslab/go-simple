@@ -1,53 +1,15 @@
 package ethapi
 
 import (
-	"context"
 	"crypto/ecdsa"
 	"fmt"
-	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/ethclient"
-	"math/big"
 )
-
-const (
-	InfuraUrl    = "https://kovan.infura.io/v3/56bf070cd1714103b3bd40e1da1edf86"
-	ContractAddr = "0xBF945030192a61E5f725Cee7fc7cc097fF76dc65"
-)
-
-func ethApi(priKey *ecdsa.PrivateKey) (*ChainConfig, *bind.TransactOpts, error) {
-	client, err := ethclient.Dial(InfuraUrl)
-	if err != nil {
-		fmt.Println("======> eth client Dial err:", err)
-		return nil, nil, err
-	}
-	var transactor *bind.TransactOpts = nil
-	if priKey != nil {
-		var nid *big.Int
-		nid, err = client.ChainID(context.TODO())
-		if err != nil {
-			return nil, nil, err
-		}
-		transactor, err = bind.NewKeyedTransactorWithChainID(priKey, nid)
-		if err != nil {
-			return nil, nil, err
-		}
-	}
-
-	var sysConfig *ChainConfig
-	confAddr := common.HexToAddress(ContractAddr)
-	sysConfig, err = NewChainConfig(confAddr, client)
-	if err != nil {
-		client.Close()
-		return nil, nil, err
-	}
-	return sysConfig, transactor, nil
-}
 
 func SyncServerList() []ConfigServerItem {
-	sysConf, _, err := ethApi(nil)
+	sysConf, _, err := configApi(nil, ConfigAddr)
 	if err != nil {
-		fmt.Println("======> ethApi err:", err)
+		fmt.Println("======> configApi err:", err)
 		return nil
 	}
 	items, err := sysConf.ServerList(nil)
@@ -60,9 +22,9 @@ func SyncServerList() []ConfigServerItem {
 }
 
 func RefreshHostByAddr(addr string) string {
-	sysConf, _, err := ethApi(nil)
+	sysConf, _, err := configApi(nil, ConfigAddr)
 	if err != nil {
-		fmt.Println("======> ethApi err:", err)
+		fmt.Println("======> configApi err:", err)
 		return ""
 	}
 
@@ -76,7 +38,7 @@ func RefreshHostByAddr(addr string) string {
 }
 
 func RegNewMiner(addr, host string, key *ecdsa.PrivateKey) (string, error) {
-	sysConf, option, err := ethApi(key)
+	sysConf, option, err := configApi(key, ConfigAddr)
 	if err != nil {
 		return "", err
 	}
@@ -87,8 +49,9 @@ func RegNewMiner(addr, host string, key *ecdsa.PrivateKey) (string, error) {
 	}
 	return tx.Hash().String(), nil
 }
+
 func UpdateNewMiner(addr, host string, key *ecdsa.PrivateKey) (string, error) {
-	sysConf, option, err := ethApi(key)
+	sysConf, option, err := configApi(key, ConfigAddr)
 	if err != nil {
 		return "", err
 	}
@@ -101,12 +64,42 @@ func UpdateNewMiner(addr, host string, key *ecdsa.PrivateKey) (string, error) {
 }
 
 func DelNewMiner(addr, host string, key *ecdsa.PrivateKey) (string, error) {
-	sysConf, option, err := ethApi(key)
+	sysConf, option, err := configApi(key, ConfigAddr)
 	if err != nil {
 		return "", err
 	}
 
 	tx, err := sysConf.RemoveServer(option, addr)
+	if err != nil {
+		return "", err
+	}
+	return tx.Hash().String(), nil
+}
+
+func GetAdvertiseAddress() (string, error) {
+	sysConf, _, err := configApi(nil, ConfigAddr)
+	if err != nil {
+		fmt.Println("======> configApi err:", err)
+		return "", err
+	}
+	addr, err := sysConf.AdvertiseAddr(nil)
+	if err != nil {
+		return "", err
+	}
+	strAddr := addr.String()
+	if strAddr == "0x0000000000000000000000000000000000000000" {
+		return "", fmt.Errorf("no valid contract address")
+	}
+	return strAddr, nil
+}
+
+func SetAdvertiseAddress(addr string, key *ecdsa.PrivateKey) (string, error) {
+	sysConf, option, err := configApi(key, ConfigAddr)
+	if err != nil {
+		return "", err
+	}
+	ethAddr := common.HexToAddress(addr)
+	tx, err := sysConf.SetAdvertisAddr(option, ethAddr)
 	if err != nil {
 		return "", err
 	}
