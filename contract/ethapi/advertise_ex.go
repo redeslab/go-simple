@@ -6,9 +6,9 @@ import (
 )
 
 type AdvertiseConfig struct {
-	Index int `json:"index"`
-	Url   int `json:"url"`
-	Typ   int `json:"typ"`
+	ImgUrl  string `json:"img_url"`
+	LinkUrl string `json:"link_url"`
+	Typ     int    `json:"typ"`
 }
 
 func AdvertiseList(contractAddr string) []AdvertiseAdItem {
@@ -52,6 +52,19 @@ func RegNewAD(name, jsonConfig, contractAddr string, key *ecdsa.PrivateKey) (str
 	}
 
 	tx, err := ad.AddItem(option, name, jsonConfig)
+	if err != nil {
+		return "", err
+	}
+	return tx.Hash().String(), nil
+}
+
+func DelAD(name, contractAddr string, key *ecdsa.PrivateKey) (string, error) {
+	ad, option, err := advertiseApi(key, contractAddr)
+	if err != nil {
+		return "", err
+	}
+
+	tx, err := ad.RemoveItem(option, name)
 	if err != nil {
 		return "", err
 	}
