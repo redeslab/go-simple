@@ -22,19 +22,28 @@ func init() {
 	AdvertiseCmd.Flags().BoolVarP(&param.one, "one", "n", false, "one one advertisements")
 	AdvertiseCmd.Flags().StringVarP(&param.id, "id",
 		"i", "", "Simple adv -n -i [ADVERTISE NAME]")
+	AdvertiseCmd.Flags().StringVarP(&param.priKey, "eth-key",
+		"k", "", "Simple adv -n -i [ADVERTISE NAME]")
 	AdvertiseCmd.Flags().BoolVarP(&param.all, "all", "a", false, "one advertisements")
 	AdvertiseCmd.Flags().StringVarP(&param.contractAddr, "address", "d", "", "smart contract address")
 
-	adInst.ImgUrl = *AdvertiseCmd.Flags().String("img", "", "--img")
-	adInst.LinkUrl = *AdvertiseCmd.Flags().String("link", "", "--link")
-	adInst.Typ = *AdvertiseCmd.Flags().Int("typ", 0, "--typ")
+	link = AdvertiseCmd.Flags().String("img", "", "--img")
+	img = AdvertiseCmd.Flags().String("link", "", "--link")
+	typ = AdvertiseCmd.Flags().Int("typ", 0, "--typ")
 }
 
-var adInst = &ethapi.AdvertiseConfig{}
+var link *string
+var img *string
+var typ *int
 
 func advertiseOp(_ *cobra.Command, _ []string) {
+
+	contractAddr := param.contractAddr
+	if len(contractAddr) == 0 {
+		contractAddr = ethapi.AdvertiseAddr
+	}
 	if param.all {
-		data := ethapi.AdvertiseList(param.contractAddr)
+		data := ethapi.AdvertiseList(contractAddr)
 		if len(data) == 0 {
 			fmt.Println("no valid config")
 		}
@@ -45,11 +54,14 @@ func advertiseOp(_ *cobra.Command, _ []string) {
 	}
 
 	if param.one {
-		data := ethapi.QueryOneAdItem(param.id, param.contractAddr)
+		data := ethapi.QueryOneAdItem(param.id, contractAddr)
 		fmt.Println(data)
 		return
 	}
-
+	if len(param.priKey) == 0 {
+		fmt.Println("======>>>empty private key")
+		return
+	}
 	pk, err := hex.DecodeString(param.priKey)
 	if err != nil {
 		fmt.Println("======>>>invalid contract private key", err)
@@ -59,11 +71,11 @@ func advertiseOp(_ *cobra.Command, _ []string) {
 	var tx = ""
 	switch param.confOp {
 	case 0, 1:
-		if len(adInst.LinkUrl) == 0 {
+		if len(*link) == 0 {
 			fmt.Println("=====>>> invalid ad lik")
 			return
 		}
-		if len(adInst.ImgUrl) == 0 {
+		if len(*img) == 0 {
 			fmt.Println("=====>>> invalid ad img")
 			return
 		}
@@ -71,14 +83,20 @@ func advertiseOp(_ *cobra.Command, _ []string) {
 			fmt.Println("=====>>> invalid ad name")
 			return
 		}
+		var adInst = &ethapi.AdvertiseConfig{
+			ImgUrl:  *img,
+			LinkUrl: *link,
+			Typ:     *typ,
+		}
+
 		bts, _ := json.Marshal(adInst)
-		tx, err = ethapi.RegNewAD(param.id, string(bts), param.contractAddr, ethPk)
+		tx, err = ethapi.RegNewAD(param.id, string(bts), contractAddr, ethPk)
 	case 2:
 		if len(param.id) == 0 {
 			fmt.Println("=====>>> invalid ad name")
 			return
 		}
-		tx, err = ethapi.DelAD(param.id, param.contractAddr, ethPk)
+		tx, err = ethapi.DelAD(param.id, contractAddr, ethPk)
 	default:
 		fmt.Println("======>>>unknown advertise operations!")
 		return
