@@ -69,7 +69,7 @@ contract Advertise is owned{
         sIdx[lastItem.name] = idx;
     }
 
-    function changeServer(string memory name, string memory config)public onlyAdmin{
+    function changeAd(string memory name, string memory config)public onlyAdmin{
         uint idx = sIdx[name];
         require(idx > 0, "no such item");
 

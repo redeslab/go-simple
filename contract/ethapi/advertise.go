@@ -36,7 +36,7 @@ type AdvertiseAdItem struct {
 
 // AdvertiseMetaData contains all meta data concerning the Advertise contract.
 var AdvertiseMetaData = &bind.MetaData{
-	ABI: "[{\"inputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"inputs\":[],\"name\":\"AdList\",\"outputs\":[{\"components\":[{\"internalType\":\"string\",\"name\":\"name\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"configInJson\",\"type\":\"string\"}],\"internalType\":\"structAdvertise.AdItem[]\",\"name\":\"\",\"type\":\"tuple[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"Administrators\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"name\",\"type\":\"string\"}],\"name\":\"QueryByOne\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"admin\",\"type\":\"address\"}],\"name\":\"addAdmin\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"name\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"config\",\"type\":\"string\"}],\"name\":\"addItem\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"advertisements\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"name\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"configInJson\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"name\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"config\",\"type\":\"string\"}],\"name\":\"changeServer\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"admin\",\"type\":\"address\"}],\"name\":\"removeAdmin\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"name\",\"type\":\"string\"}],\"name\":\"removeItem\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"name\":\"sIdx\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"transferOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
+	ABI: "[{\"inputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"inputs\":[],\"name\":\"AdList\",\"outputs\":[{\"components\":[{\"internalType\":\"string\",\"name\":\"name\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"configInJson\",\"type\":\"string\"}],\"internalType\":\"structAdvertise.AdItem[]\",\"name\":\"\",\"type\":\"tuple[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"Administrators\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"name\",\"type\":\"string\"}],\"name\":\"QueryByOne\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"admin\",\"type\":\"address\"}],\"name\":\"addAdmin\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"name\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"config\",\"type\":\"string\"}],\"name\":\"addItem\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"advertisements\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"name\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"configInJson\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"name\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"config\",\"type\":\"string\"}],\"name\":\"changeAd\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"admin\",\"type\":\"address\"}],\"name\":\"removeAdmin\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"name\",\"type\":\"string\"}],\"name\":\"removeItem\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"name\":\"sIdx\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"transferOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
 }
 
 // AdvertiseABI is the input ABI used to generate the binding from.
@@ -427,25 +427,25 @@ func (_Advertise *AdvertiseTransactorSession) AddItem(name string, config string
 	return _Advertise.Contract.AddItem(&_Advertise.TransactOpts, name, config)
 }
 
-// ChangeServer is a paid mutator transaction binding the contract method 0xf5a7d9b9.
+// ChangeAd is a paid mutator transaction binding the contract method 0x01727022.
 //
-// Solidity: function changeServer(string name, string config) returns()
-func (_Advertise *AdvertiseTransactor) ChangeServer(opts *bind.TransactOpts, name string, config string) (*types.Transaction, error) {
-	return _Advertise.contract.Transact(opts, "changeServer", name, config)
+// Solidity: function changeAd(string name, string config) returns()
+func (_Advertise *AdvertiseTransactor) ChangeAd(opts *bind.TransactOpts, name string, config string) (*types.Transaction, error) {
+	return _Advertise.contract.Transact(opts, "changeAd", name, config)
 }
 
-// ChangeServer is a paid mutator transaction binding the contract method 0xf5a7d9b9.
+// ChangeAd is a paid mutator transaction binding the contract method 0x01727022.
 //
-// Solidity: function changeServer(string name, string config) returns()
-func (_Advertise *AdvertiseSession) ChangeServer(name string, config string) (*types.Transaction, error) {
-	return _Advertise.Contract.ChangeServer(&_Advertise.TransactOpts, name, config)
+// Solidity: function changeAd(string name, string config) returns()
+func (_Advertise *AdvertiseSession) ChangeAd(name string, config string) (*types.Transaction, error) {
+	return _Advertise.Contract.ChangeAd(&_Advertise.TransactOpts, name, config)
 }
 
-// ChangeServer is a paid mutator transaction binding the contract method 0xf5a7d9b9.
+// ChangeAd is a paid mutator transaction binding the contract method 0x01727022.
 //
-// Solidity: function changeServer(string name, string config) returns()
-func (_Advertise *AdvertiseTransactorSession) ChangeServer(name string, config string) (*types.Transaction, error) {
-	return _Advertise.Contract.ChangeServer(&_Advertise.TransactOpts, name, config)
+// Solidity: function changeAd(string name, string config) returns()
+func (_Advertise *AdvertiseTransactorSession) ChangeAd(name string, config string) (*types.Transaction, error) {
+	return _Advertise.Contract.ChangeAd(&_Advertise.TransactOpts, name, config)
 }
 
 // RemoveAdmin is a paid mutator transaction binding the contract method 0x1785f53c.

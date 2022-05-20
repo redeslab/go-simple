@@ -36,6 +36,7 @@ func TestQueryAdvertiseAddr(t *testing.T) {
 	fmt.Println("result:", ret, err)
 }
 
-func TestAddAd(t *testing.T) {
-
+func TestLoadAdList(t *testing.T) {
+	ads := AdvertiseList("")
+	fmt.Println(ads)
 }

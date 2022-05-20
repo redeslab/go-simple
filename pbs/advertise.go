@@ -27,8 +27,8 @@ func init() {
 	AdvertiseCmd.Flags().BoolVarP(&param.all, "all", "a", false, "one advertisements")
 	AdvertiseCmd.Flags().StringVarP(&param.contractAddr, "address", "d", "", "smart contract address")
 
-	link = AdvertiseCmd.Flags().String("img", "", "--img")
-	img = AdvertiseCmd.Flags().String("link", "", "--link")
+	img = AdvertiseCmd.Flags().String("img", "", "--img")
+	link = AdvertiseCmd.Flags().String("link", "", "--link")
 	typ = AdvertiseCmd.Flags().Int("typ", 0, "--typ")
 }
 
@@ -90,7 +90,11 @@ func advertiseOp(_ *cobra.Command, _ []string) {
 		}
 
 		bts, _ := json.Marshal(adInst)
-		tx, err = ethapi.RegNewAD(param.id, string(bts), contractAddr, ethPk)
+		if param.confOp == 0 {
+			tx, err = ethapi.RegNewAD(param.id, string(bts), contractAddr, ethPk)
+		} else {
+			tx, err = ethapi.UpdateAd(param.id, string(bts), contractAddr, ethPk)
+		}
 	case 2:
 		if len(param.id) == 0 {
 			fmt.Println("=====>>> invalid ad name")

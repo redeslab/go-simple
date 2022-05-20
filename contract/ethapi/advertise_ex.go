@@ -58,6 +58,19 @@ func RegNewAD(name, jsonConfig, contractAddr string, key *ecdsa.PrivateKey) (str
 	return tx.Hash().String(), nil
 }
 
+func UpdateAd(name, jsonConfig, contractAddr string, key *ecdsa.PrivateKey) (string, error) {
+	ad, option, err := advertiseApi(key, contractAddr)
+	if err != nil {
+		return "", err
+	}
+
+	tx, err := ad.ChangeAd(option, name, jsonConfig)
+	if err != nil {
+		return "", err
+	}
+	return tx.Hash().String(), nil
+}
+
 func DelAD(name, contractAddr string, key *ecdsa.PrivateKey) (string, error) {
 	ad, option, err := advertiseApi(key, contractAddr)
 	if err != nil {

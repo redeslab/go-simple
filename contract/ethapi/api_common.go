@@ -13,7 +13,7 @@ import (
 const (
 	InfuraUrl     = "https://kovan.infura.io/v3/56bf070cd1714103b3bd40e1da1edf86"
 	ConfigAddr    = "0xA9de05401C30f9E87910DF5ae83Ab591bE9EA296"
-	AdvertiseAddr = "0x27EBBd1582e06e66F0020E9e3f9B91404409699C"
+	AdvertiseAddr = "0xfA1159141f9fE553B18d5E67ee58e7ABE53cCa71"
 )
 
 func configApi(priKey *ecdsa.PrivateKey, contract string) (*ChainConfig, *bind.TransactOpts, error) {
