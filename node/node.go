@@ -151,32 +151,32 @@ func (n *Node) newWorker(conn net.Conn) {
 	jsonConn := &network.JsonConn{Conn: lvConn}
 	req := &SetupReq{}
 	if err := jsonConn.ReadJsonMsg(req); err != nil {
-		nLog.Errorf("read setup msg err:%s", n.pipeID, err)
+		nLog.Errorf("[%d]read setup msg err:%s", n.pipeID, err)
 		return
 	}
 	jsonConn.WriteAck(nil)
 
 	var aesKey account.PipeCryptKey
 	if err := account.GenerateAesKey(&aesKey, req.SubAddr.ToPubKey(), WInst().CryptKey()); err != nil {
-		nLog.Errorf("generate aes key err:%s", n.pipeID, err)
+		nLog.Errorf("[%d]generate aes key err:%s", n.pipeID, err)
 		return
 	}
 
 	aesConn, err := network.NewAesConn(lvConn, aesKey[:], req.IV)
 	if err != nil {
-		nLog.Errorf("create aes connection err:%s", n.pipeID, err)
+		nLog.Errorf("[%d]create aes connection err:%s", n.pipeID, err)
 		return
 	}
 	jsonConn = &network.JsonConn{Conn: aesConn}
 	prob := &ProbeReq{}
 	if err := jsonConn.ReadJsonMsg(prob); err != nil {
-		nLog.Errorf("read probe msg err:%s", n.pipeID, err)
+		nLog.Errorf("[%d]read probe msg err:%s", n.pipeID, err)
 		return
 	}
 
 	tgtConn, err := net.Dial("tcp", prob.Target)
 	if err != nil {
-		nLog.Errorf("dial target[%s] err:%s", n.pipeID, prob.Target, err)
+		nLog.Errorf("[%d]dial target[%s] err:%s", n.pipeID, prob.Target, err)
 		return
 	}
 	_ = tgtConn.(*net.TCPConn).SetKeepAlive(true)
@@ -203,12 +203,12 @@ func (n *Node) upStream(aesConn, tgtConn net.Conn) {
 	for {
 		no, err := aesConn.Read(buffer)
 		if no == 0 {
-			nLog.Warning("read:client--xxx-->proxy---->target:", n.pipeID, err, no)
+			nLog.Warningf("[%d]read:client--xxx-->proxy---->target err=>%s left:%d", n.pipeID, err, no)
 			return
 		}
 		_, err = tgtConn.Write(buffer[:no])
 		if err != nil {
-			nLog.Warning("write: client---->proxy--xxx-->target", n.pipeID, err)
+			nLog.Warningf("[%d]write: client---->proxy--xxx-->target err=>%s", n.pipeID, err)
 			return
 		}
 	}
@@ -219,7 +219,7 @@ func (n *Node) downStream(aesConn, tgtConn net.Conn, peerMaxPacketSize int) {
 	for {
 		no, err := tgtConn.Read(buffer)
 		if no == 0 {
-			nLog.Warning("read: client<----proxy<--xxx--target:", n.pipeID, err)
+			nLog.Warningf("[%d]read: client<----proxy<--xxx--target err=>%s", n.pipeID, err)
 			_ = tgtConn.SetDeadline(time.Now().Add(time.Second * 10))
 			break
 		}
@@ -234,7 +234,7 @@ func (n *Node) downStream(aesConn, tgtConn net.Conn, peerMaxPacketSize int) {
 		}
 		_, err = aesConn.Write(data)
 		if err != nil {
-			nLog.Warning("write client<--xxx--proxy<----target:", err, n.pipeID, no)
+			nLog.Warningf("[%d]write client<--xxx--proxy<----target err:%s left=%d", n.pipeID, err, no)
 			break
 		}
 		no = no - peerMaxPacketSize
