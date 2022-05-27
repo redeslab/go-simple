@@ -103,7 +103,6 @@ func (n *Node) CtrlService() {
 			nLog.Warning("control channel error ", err)
 			continue
 		}
-		n.pipeID++
 		go n.ctrlMsg(buf[:nr], addr)
 	}
 }
@@ -132,6 +131,7 @@ func (n *Node) Mining() {
 		if err != nil {
 			panic(err)
 		}
+		n.pipeID++
 		go n.newWorker(conn)
 	}
 }
