@@ -206,6 +206,8 @@ func (n *Node) upStream(aesConn, tgtConn net.Conn) {
 		if no == 0 {
 			if err != io.EOF {
 				nLog.Warningf("[%d]read:client--xxx-->proxy---->target err=>%s left:%d", n.pipeID, err, no)
+			} else {
+				nLog.Debugf("[%d]read: client--xxx-->proxy---->target EOF ", n.pipeID)
 			}
 			return
 		}
@@ -224,6 +226,8 @@ func (n *Node) downStream(aesConn, tgtConn net.Conn, peerMaxPacketSize int) {
 		if no == 0 {
 			if err != io.EOF {
 				nLog.Warningf("[%d]read: client<----proxy<--xxx--target err=>%s", n.pipeID, err)
+			} else {
+				nLog.Debugf("[%d]read: client<----proxy<--xxx--target EOF ", n.pipeID)
 			}
 			_ = tgtConn.SetDeadline(time.Now().Add(_conf.TimeOut))
 			break
