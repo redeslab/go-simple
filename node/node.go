@@ -9,6 +9,7 @@ import (
 	"github.com/op/go-logging"
 	"github.com/redeslab/go-simple/account"
 	"github.com/redeslab/go-simple/network"
+	"io"
 	"net"
 	"sync"
 	"time"
@@ -203,7 +204,9 @@ func (n *Node) upStream(aesConn, tgtConn net.Conn) {
 	for {
 		no, err := aesConn.Read(buffer)
 		if no == 0 {
-			nLog.Warningf("[%d]read:client--xxx-->proxy---->target err=>%s left:%d", n.pipeID, err, no)
+			if err != io.EOF {
+				nLog.Warningf("[%d]read:client--xxx-->proxy---->target err=>%s left:%d", n.pipeID, err, no)
+			}
 			return
 		}
 		_, err = tgtConn.Write(buffer[:no])
@@ -219,7 +222,9 @@ func (n *Node) downStream(aesConn, tgtConn net.Conn, peerMaxPacketSize int) {
 	for {
 		no, err := tgtConn.Read(buffer)
 		if no == 0 {
-			nLog.Warningf("[%d]read: client<----proxy<--xxx--target err=>%s", n.pipeID, err)
+			if err != io.EOF {
+				nLog.Warningf("[%d]read: client<----proxy<--xxx--target err=>%s", n.pipeID, err)
+			}
 			_ = tgtConn.SetDeadline(time.Now().Add(_conf.TimeOut))
 			break
 		}
