@@ -229,17 +229,19 @@ func (n *Node) downStream(aesConn, tgtConn net.Conn, peerMaxPacketSize int) {
 		var idx = 0
 		if no > peerMaxPacketSize {
 			data = buffer[idx : idx+peerMaxPacketSize]
+			nLog.Debug("big data need to split", no, idx)
 		} else {
 			data = buffer[idx : idx+no]
+			nLog.Debug("correct data size to split", no, idx)
 		}
-		_, err = aesConn.Write(data)
+		writeNo, err := aesConn.Write(data)
 		if err != nil {
 			nLog.Warningf("[%d]write client<--xxx--proxy<----target err:%s left=%d", n.pipeID, err, no)
 			break
 		}
 		no = no - peerMaxPacketSize
 		if no > 0 {
-			idx = idx + peerMaxPacketSize
+			idx = idx + writeNo
 			goto writeToCli
 		}
 	}
