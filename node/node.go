@@ -220,7 +220,7 @@ func (n *Node) downStream(aesConn, tgtConn net.Conn, peerMaxPacketSize int) {
 		no, err := tgtConn.Read(buffer)
 		if no == 0 {
 			nLog.Warningf("[%d]read: client<----proxy<--xxx--target err=>%s", n.pipeID, err)
-			_ = tgtConn.SetDeadline(time.Now().Add(time.Second * 10))
+			_ = tgtConn.SetDeadline(time.Now().Add(_conf.TimeOut))
 			break
 		}
 
