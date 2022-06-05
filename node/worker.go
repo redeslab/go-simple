@@ -94,16 +94,14 @@ func (w *worker) downStream(aesConn, tgtConn net.Conn, peerMaxPacketSize int) {
 	buffer := make([]byte, ConnectionBufSize)
 	for {
 		no, err := tgtConn.Read(buffer)
-		if no == 0 || err != nil {
+		if no == 0 {
 			if err != io.EOF {
 				nLog.Warningf("[%d]read: client<----proxy<--xxx--target err=>%s", w.wid, err)
 			} else {
 				nLog.Debugf("[%d]read: client<----proxy<--xxx--target EOF ", w.wid)
 			}
 			_ = tgtConn.SetDeadline(time.Now().Add(_conf.TimeOut))
-			if no == 0 {
-				return
-			}
+			break
 		}
 
 		var idx = 0
