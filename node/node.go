@@ -223,18 +223,21 @@ func (n *Node) downStream(aesConn, tgtConn net.Conn, peerMaxPacketSize int) {
 	buffer := make([]byte, ConnectionBufSize)
 	for {
 		no, err := tgtConn.Read(buffer)
-		if no == 0 {
+		if no == 0 || err != nil {
 			if err != io.EOF {
 				nLog.Warningf("[%d]read: client<----proxy<--xxx--target err=>%s", n.pipeID, err)
 			} else {
 				nLog.Debugf("[%d]read: client<----proxy<--xxx--target EOF ", n.pipeID)
 			}
 			_ = tgtConn.SetDeadline(time.Now().Add(_conf.TimeOut))
-			break
+			if no == 0 {
+				return
+			}
 		}
 
 		var idx = 0
 		var data []byte
+
 	writeToCli:
 		if no > peerMaxPacketSize {
 			data = buffer[idx : idx+peerMaxPacketSize]
