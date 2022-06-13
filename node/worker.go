@@ -87,6 +87,7 @@ func (w *worker) upStream(aesConn, tgtConn net.Conn) {
 			nLog.Warningf("[%d]write: client---->proxy--xxx-->target err=>%s", w.wid, err)
 			return
 		}
+		nLog.Debugf("[%d]read: client---->proxy---->target data:%d ", w.wid, no)
 	}
 }
 
@@ -107,6 +108,7 @@ func (w *worker) downStream(aesConn, tgtConn net.Conn, peerMaxPacketSize int) {
 		var idx = 0
 		var data []byte
 
+		nLog.Debugf("[%d]read: client<----proxy<--xxx--target data ", w.wid, no)
 	writeToCli:
 		if no > peerMaxPacketSize {
 			data = buffer[idx : idx+peerMaxPacketSize]
