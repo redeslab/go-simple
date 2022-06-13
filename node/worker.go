@@ -112,6 +112,7 @@ func (w *worker) downStream(aesConn, tgtConn net.Conn, peerMaxPacketSize int) {
 		}
 
 		nLog.Debugf("[%d]read: client<----proxy<--xxx--target data:%d", w.wid, no, writeNo)
+	}
 
 	//	var idx = 0
 	//	var data []byte
