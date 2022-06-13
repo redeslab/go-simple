@@ -105,26 +105,32 @@ func (w *worker) downStream(aesConn, tgtConn net.Conn, peerMaxPacketSize int) {
 			break
 		}
 
-		var idx = 0
-		var data []byte
-
-		nLog.Debugf("[%d]read: client<----proxy<--xxx--target data:%d", w.wid, no)
-	writeToCli:
-		if no > peerMaxPacketSize {
-			data = buffer[idx : idx+peerMaxPacketSize]
-			nLog.Debugf("[%d]big data need to split no=%d idx=%d", w.wid, no, idx)
-		} else {
-			data = buffer[idx : idx+no]
-		}
-		writeNo, err := aesConn.Write(data)
+		writeNo, err := aesConn.Write(buffer[:no])
 		if err != nil {
 			nLog.Warningf("[%d]write client<--xxx--proxy<----target err:%s left=%d", w.wid, err, no)
 			break
 		}
-		no = no - peerMaxPacketSize
-		if no > 0 {
-			idx = idx + writeNo
-			goto writeToCli
-		}
-	}
+
+		nLog.Debugf("[%d]read: client<----proxy<--xxx--target data:%d", w.wid, no, writeNo)
+
+	//	var idx = 0
+	//	var data []byte
+	//writeToCli:
+	//	if no > peerMaxPacketSize {
+	//		data = buffer[idx : idx+peerMaxPacketSize]
+	//		nLog.Debugf("[%d]big data need to split no=%d idx=%d", w.wid, no, idx)
+	//	} else {
+	//		data = buffer[idx : idx+no]
+	//	}
+	//	writeNo, err := aesConn.Write(data)
+	//	if err != nil {
+	//		nLog.Warningf("[%d]write client<--xxx--proxy<----target err:%s left=%d", w.wid, err, no)
+	//		break
+	//	}
+	//	no = no - peerMaxPacketSize
+	//	if no > 0 {
+	//		idx = idx + writeNo
+	//		goto writeToCli
+	//	}
+	//}
 }
