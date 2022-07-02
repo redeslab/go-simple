@@ -25,7 +25,7 @@ const (
 	LogFile           = "log.svn"
 	ConfFile          = "conf.svn"
 	DBDir             = "dabtabse"
-	ConnTimeOut       = 10
+	ConnTimeOut       = 4
 	ConnectionBufSize = 1 << 20
 )
 
