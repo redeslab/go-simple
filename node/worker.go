@@ -17,7 +17,6 @@ func (w *worker) startWork() {
 	conn := w.local
 	nLog.Debug("======>>>new network:", w.wid, conn.RemoteAddr().String())
 	_ = conn.(*net.TCPConn).SetKeepAlive(true)
-	defer conn.SetDeadline(time.Now().Add(_conf.TimeOut))
 
 	lvConn := network.NewLVConn(conn)
 	jsonConn := &network.JsonConn{Conn: lvConn}
@@ -55,19 +54,31 @@ func (w *worker) startWork() {
 	defer tgtConn.SetDeadline(time.Now().Add(_conf.TimeOut))
 	jsonConn.WriteAck(nil)
 
-	var peerMaxPacketSize = prob.MaxPacketSize
-	if peerMaxPacketSize == 0 {
-		peerMaxPacketSize = ConnectionBufSize
-	}
-	nLog.Debugf("Setup pipe[%d] for:[%s] from:%s with peer max size=%d",
+	nLog.Debugf("Setup pipe[%d] for:[%s] from:%s ",
 		w.wid,
 		prob.Target,
-		aesConn.RemoteAddr().String(),
-		peerMaxPacketSize)
+		aesConn.RemoteAddr().String())
 
-	go w.upStream(aesConn, tgtConn)
+	go relay(tgtConn, aesConn)
+	relay(aesConn, tgtConn)
+}
 
-	w.downStream(aesConn, tgtConn, peerMaxPacketSize)
+func relay(src, dst net.Conn) {
+	buf := make([]byte, ConnectionBufSize)
+	defer src.Close()
+	defer dst.Close()
+
+	_, err := io.CopyBuffer(src, dst, buf)
+	if err != nil {
+		nLog.Warningf("relay finalized by err:%s", err)
+		return
+	}
+
+	nLog.Debugf("relay finished:[%s--->%s]===>[%s--->%s]",
+		src.LocalAddr().String(),
+		src.RemoteAddr().String(),
+		dst.LocalAddr().String(),
+		dst.RemoteAddr().String())
 }
 
 func (w *worker) upStream(aesConn, tgtConn net.Conn) {
@@ -91,7 +102,7 @@ func (w *worker) upStream(aesConn, tgtConn net.Conn) {
 	}
 }
 
-func (w *worker) downStream(aesConn, tgtConn net.Conn, peerMaxPacketSize int) {
+func (w *worker) downStream(aesConn, tgtConn net.Conn) {
 	buffer := make([]byte, ConnectionBufSize)
 	for {
 		no, err := tgtConn.Read(buffer)
