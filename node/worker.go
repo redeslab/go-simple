@@ -64,7 +64,7 @@ func (w *worker) startWork() {
 }
 
 func relay(src, dst net.Conn) {
-	buf := make([]byte, ConnectionBufSize)
+	buf := make([]byte, network.BuffSize)
 	defer src.Close()
 	defer dst.Close()
 
@@ -82,7 +82,7 @@ func relay(src, dst net.Conn) {
 }
 
 func (w *worker) upStream(aesConn, tgtConn net.Conn) {
-	buffer := make([]byte, ConnectionBufSize)
+	buffer := make([]byte, network.BuffSize)
 	for {
 		no, err := aesConn.Read(buffer)
 		if no == 0 {
@@ -103,7 +103,7 @@ func (w *worker) upStream(aesConn, tgtConn net.Conn) {
 }
 
 func (w *worker) downStream(aesConn, tgtConn net.Conn) {
-	buffer := make([]byte, ConnectionBufSize)
+	buffer := make([]byte, network.BuffSize)
 	for {
 		no, err := tgtConn.Read(buffer)
 		if no == 0 {

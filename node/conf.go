@@ -23,13 +23,12 @@ type Config struct {
 var Version = "1.0.1"
 
 const (
-	WalletFile        = "wallet.json"
-	LogFile           = "log.svn"
-	ConfFile          = "conf.svn"
-	DBDir             = "dabtabse"
-	ConnTimeOut       = 4
-	ConnectionBufSize = 1 << 15
-	LogModuleName     = "node"
+	WalletFile    = "wallet.json"
+	LogFile       = "log.svn"
+	ConfFile      = "conf.svn"
+	DBDir         = "dabtabse"
+	ConnTimeOut   = 4
+	LogModuleName = "node"
 )
 
 var _conf = &Config{}
