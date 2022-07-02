@@ -73,6 +73,21 @@ func (conn *JsonConn) ReadJsonMsg(v interface{}) error {
 	return nil
 }
 
+func (conn *JsonConn) ReadJsoBuffer(buffer []byte, v interface{}) error {
+	n, err := conn.Read(buffer)
+	if err != nil && err != io.EOF {
+		return err
+	}
+	if n == 0 {
+		return fmt.Errorf("read empty data")
+	}
+	//fmt.Println("======>>>remove me later:=>", string(buffer))
+	if err = json.Unmarshal(buffer[:n], v); err != nil {
+		return err
+	}
+	return nil
+}
+
 func (conn *JsonConn) WriteAck(err error) {
 	var data []byte
 	if err == nil {
@@ -86,5 +101,5 @@ func (conn *JsonConn) WriteAck(err error) {
 			Message: err.Error(),
 		})
 	}
-	conn.Write(data)
+	_, _ = conn.Write(data)
 }
