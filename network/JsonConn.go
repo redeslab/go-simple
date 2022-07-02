@@ -45,6 +45,23 @@ func (conn *JsonConn) Syn(v interface{}) error {
 	return nil
 }
 
+func (conn *JsonConn) SynBuffer(buff []byte, v interface{}) error {
+	if err := conn.WriteJsonMsg(v); err != nil {
+		return err
+	}
+
+	ack := &ACK{}
+	if err := conn.ReadJsonBuffer(buff, ack); err != nil {
+		return err
+	}
+
+	if !ack.Success {
+		return fmt.Errorf("create payment channel failed:%s", ack.Message)
+	}
+
+	return nil
+}
+
 func (conn *JsonConn) WriteJsonMsg(v interface{}) error {
 	data, err := json.Marshal(v)
 	if err != nil {
@@ -73,8 +90,8 @@ func (conn *JsonConn) ReadJsonMsg(v interface{}) error {
 	return nil
 }
 
-func (conn *JsonConn) ReadJsoBuffer(buffer []byte, v interface{}) error {
-	n, err := conn.Read(buffer)
+func (conn *JsonConn) ReadJsonBuffer(buff []byte, v interface{}) error {
+	n, err := conn.Read(buff)
 	if err != nil && err != io.EOF {
 		return err
 	}
@@ -82,7 +99,7 @@ func (conn *JsonConn) ReadJsoBuffer(buffer []byte, v interface{}) error {
 		return fmt.Errorf("read empty data")
 	}
 	//fmt.Println("======>>>remove me later:=>", string(buffer))
-	if err = json.Unmarshal(buffer[:n], v); err != nil {
+	if err = json.Unmarshal(buff[:n], v); err != nil {
 		return err
 	}
 	return nil
