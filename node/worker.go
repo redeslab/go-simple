@@ -45,7 +45,7 @@ func (w *worker) startWork() {
 		return
 	}
 
-	tgtConn, err := net.Dial("tcp", prob.Target)
+	tgtConn, err := net.Dial("tcp4", prob.Target)
 	if err != nil {
 		nLog.Errorf("[%d]dial target[%s] err:%s", w.wid, prob.Target, err)
 		return
