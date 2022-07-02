@@ -17,7 +17,7 @@ func (w *worker) startWork() {
 	conn := w.local
 	nLog.Debug("======>>>new network:", w.wid, conn.RemoteAddr().String())
 	_ = conn.(*net.TCPConn).SetKeepAlive(true)
-
+	defer conn.SetDeadline(time.Now().Add(_conf.TimeOut))
 	lvConn := network.NewLVConn(conn)
 	jsonConn := &network.JsonConn{Conn: lvConn}
 	req := &SetupReq{}
