@@ -15,7 +15,7 @@ import (
 var (
 	instance *Node = nil
 	once     sync.Once
-	nLog, _  = logging.GetLogger("node")
+	nLog, _  = logging.GetLogger(LogModuleName)
 )
 
 type Node struct {

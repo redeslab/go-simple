@@ -3,6 +3,7 @@ package node
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/op/go-logging"
 	"github.com/redeslab/go-simple/util"
 	"golang.org/x/crypto/ssh/terminal"
 	"io/ioutil"
@@ -16,6 +17,7 @@ type Config struct {
 	DBPath     string        `json:"database"`
 	LogPath    string        `json:"log_file"`
 	TimeOut    time.Duration `json:"conn_timeout"`
+	LogLevel   logging.Level `json:"log_level"`
 }
 
 var Version = "1.0.1"
@@ -27,6 +29,7 @@ const (
 	DBDir             = "dabtabse"
 	ConnTimeOut       = 4
 	ConnectionBufSize = 1 << 20
+	LogModuleName     = "node"
 )
 
 var _conf = &Config{}
@@ -37,11 +40,13 @@ func (pc *Config) String() string {
 		"+DBPath:\t%s+\n"+
 		"+LogPath:\t%s+\n"+
 		"+TimeOut:\t%d+\n"+
+		"+LogLevel:\t%s+\n"+
 		"++++++++++++++++++++++++++++++++++++++++++++++++++++\n",
 		pc.WalletPath,
 		pc.DBPath,
 		pc.LogPath,
-		pc.TimeOut)
+		pc.TimeOut,
+		pc.LogLevel.String())
 }
 
 func InitDefaultConfig() *Config {
@@ -91,6 +96,7 @@ func PrepareConfig(auth, confPath string) {
 	initConfig(confPath)
 
 	util.InitLog(_conf.LogPath)
+	logging.SetLevel(_conf.LogLevel, LogModuleName)
 
 	if auth == "" {
 		fmt.Println("Password=>")
