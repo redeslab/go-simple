@@ -8,7 +8,7 @@ import (
 )
 
 const (
-	BuffSize = 1 << 15
+	BuffSize = 1 << 17
 )
 
 type ACK struct {
