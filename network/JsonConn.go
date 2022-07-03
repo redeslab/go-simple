@@ -8,7 +8,7 @@ import (
 )
 
 const (
-	BuffSize = 1 << 17
+	MTU = 1 << 17
 )
 
 type ACK struct {
@@ -74,7 +74,7 @@ func (conn *JsonConn) WriteJsonMsg(v interface{}) error {
 }
 
 func (conn *JsonConn) ReadJsonMsg(v interface{}) error {
-	buffer := make([]byte, BuffSize)
+	buffer := make([]byte, MTU)
 	n, err := conn.Read(buffer)
 	if err != nil && err != io.EOF {
 		return err

@@ -27,7 +27,7 @@ func (lc *LVConn) Read(buf []byte) (n int, err error) {
 	}
 
 	dataLen := util.ByteToUint(lenBuf)
-	if dataLen == 0 || dataLen > BuffSize {
+	if dataLen == 0 || dataLen > MTU {
 		err = fmt.Errorf("wrong buffer size:%d", dataLen)
 		return
 	}
