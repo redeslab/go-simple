@@ -59,8 +59,9 @@ func (w *worker) startWork() {
 		prob.Target,
 		aesConn.RemoteAddr().String())
 
-	go relay(tgtConn, aesConn)
-	relay(aesConn, tgtConn)
+	go w.upStream(aesConn, tgtConn)
+	w.downStream(aesConn, tgtConn)
+	_ = tgtConn.Close()
 }
 
 func relay(src, dst net.Conn) {
