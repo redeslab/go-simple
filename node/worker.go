@@ -8,6 +8,10 @@ import (
 	"time"
 )
 
+const (
+	DefaultBufSize = 1 << 20
+)
+
 type worker struct {
 	wid   int
 	local net.Conn
@@ -21,7 +25,8 @@ func (w *worker) startWork() {
 	lvConn := network.NewLVConn(conn)
 	jsonConn := &network.JsonConn{Conn: lvConn}
 	req := &SetupReq{}
-	if err := jsonConn.ReadJsonMsg(req); err != nil {
+	ctrlBuf := make([]byte, 1<<11)
+	if err := jsonConn.ReadJsonBuffer(ctrlBuf, req); err != nil {
 		nLog.Errorf("[%d]read setup msg err:%s", w.wid, err)
 		return
 	}
@@ -40,7 +45,7 @@ func (w *worker) startWork() {
 	}
 	jsonConn = &network.JsonConn{Conn: aesConn}
 	prob := &ProbeReq{}
-	if err := jsonConn.ReadJsonMsg(prob); err != nil {
+	if err := jsonConn.ReadJsonBuffer(ctrlBuf, prob); err != nil {
 		nLog.Errorf("[%d]read probe msg err:%s", w.wid, err)
 		return
 	}
@@ -65,7 +70,7 @@ func (w *worker) startWork() {
 }
 
 func relay(src, dst net.Conn) {
-	buf := make([]byte, network.MTU)
+	buf := make([]byte, DefaultBufSize)
 	defer src.Close()
 	defer dst.Close()
 
@@ -83,7 +88,7 @@ func relay(src, dst net.Conn) {
 }
 
 func (w *worker) upStream(aesConn, tgtConn net.Conn) {
-	buffer := make([]byte, network.MTU)
+	buffer := make([]byte, DefaultBufSize)
 	for {
 		no, err := aesConn.Read(buffer)
 		if no == 0 {
@@ -104,7 +109,7 @@ func (w *worker) upStream(aesConn, tgtConn net.Conn) {
 }
 
 func (w *worker) downStream(aesConn, tgtConn net.Conn) {
-	buffer := make([]byte, network.MTU)
+	buffer := make([]byte, DefaultBufSize)
 	for {
 		no, err := tgtConn.Read(buffer)
 		if no == 0 {

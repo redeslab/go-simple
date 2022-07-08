@@ -8,39 +8,59 @@ import (
 	"net"
 )
 
+const (
+	MaxBuffer = 1 << 30
+	LenSize   = 4
+)
+
 type LVConn struct {
 	net.Conn
+	bufCache []byte
+	lenBuf   []byte
 }
 
 func NewLVConn(conn net.Conn) net.Conn {
-	return &LVConn{Conn: conn}
+	return &LVConn{Conn: conn, lenBuf: make([]byte, LenSize)}
 }
 
-func (lc *LVConn) Read(buf []byte) (n int, err error) {
-
-	lenBuf := make([]byte, 4)
-	if _, err = io.ReadFull(lc.Conn, lenBuf); err != nil {
-		//if err != io.EOF {
-		//	logger.Notice("\nRead length of data err:", err)
-		//}
-		return
+func (lc *LVConn) Read(buf []byte) (int, error) {
+	leftLen := len(lc.bufCache)
+	if leftLen > 0 {
+		cpLen := copy(buf, lc.bufCache)
+		if cpLen == leftLen {
+			lc.bufCache = nil
+		} else {
+			lc.bufCache = lc.bufCache[cpLen:]
+		}
+		return cpLen, nil
 	}
 
-	dataLen := util.ByteToUint(lenBuf)
-	if dataLen == 0 || dataLen > MTU {
-		err = fmt.Errorf("wrong buffer size:%d", dataLen)
-		return
+	if _, err := io.ReadFull(lc.Conn, lc.lenBuf); err != nil {
+		return 0, err
 	}
 
-	if len(buf) < int(dataLen) {
-		return 0, fmt.Errorf("buffer is too small(buf:%d, data:%d)", len(buf), dataLen)
+	dataLen := int(util.ByteToUint(lc.lenBuf))
+	if dataLen == 0 || dataLen >= MaxBuffer {
+		return 0, fmt.Errorf("wrong buffer size:%d", dataLen)
 	}
 
-	buf = buf[:dataLen]
-	if n, err = io.ReadFull(lc.Conn, buf); err != nil {
-		return
+	bufLen := len(buf)
+	if bufLen >= dataLen {
+		buf = buf[:dataLen]
+		return io.ReadFull(lc.Conn, buf)
 	}
-	return int(dataLen), err
+
+	n, err := io.ReadFull(lc.Conn, buf)
+	if err != nil {
+		return n, err
+	}
+
+	lc.bufCache = make([]byte, dataLen-bufLen)
+	_, err = io.ReadFull(lc.Conn, lc.bufCache)
+	if err != nil {
+		return bufLen, err
+	}
+	return bufLen, nil
 }
 
 func (lc *LVConn) Write(buf []byte) (n int, err error) {

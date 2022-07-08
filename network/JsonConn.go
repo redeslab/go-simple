@@ -7,10 +7,6 @@ import (
 	"net"
 )
 
-const (
-	MTU = 1 << 17
-)
-
 type ACK struct {
 	Success bool
 	Message string
@@ -25,23 +21,6 @@ func DialJson(network, address string) (*JsonConn, error) {
 		return nil, err
 	}
 	return &JsonConn{Conn: conn}, nil
-}
-
-func (conn *JsonConn) Syn(v interface{}) error {
-	if err := conn.WriteJsonMsg(v); err != nil {
-		return err
-	}
-
-	ack := &ACK{}
-	if err := conn.ReadJsonMsg(ack); err != nil {
-		return err
-	}
-
-	if !ack.Success {
-		return fmt.Errorf("create payment channel failed:%s", ack.Message)
-	}
-
-	return nil
 }
 
 func (conn *JsonConn) SynBuffer(buff []byte, v interface{}) error {
@@ -68,22 +47,6 @@ func (conn *JsonConn) WriteJsonMsg(v interface{}) error {
 	}
 
 	if _, err := conn.Write(data); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (conn *JsonConn) ReadJsonMsg(v interface{}) error {
-	buffer := make([]byte, MTU)
-	n, err := conn.Read(buffer)
-	if err != nil && err != io.EOF {
-		return err
-	}
-	if n == 0 {
-		return fmt.Errorf("read empty data")
-	}
-	//fmt.Println("======>>>remove me later:=>", string(buffer))
-	if err = json.Unmarshal(buffer[:n], v); err != nil {
 		return err
 	}
 	return nil
