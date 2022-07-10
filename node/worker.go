@@ -37,6 +37,7 @@ func (w *worker) startWork() {
 		nLog.Errorf("[%d]generate aes key err:%s", w.wid, err)
 		return
 	}
+	nLog.Errorf("[%d]create aes connection err:%v", w.wid, aesKey)
 
 	aesConn, err := network.NewAesConn(conn, aesKey[:], req.IV)
 	if err != nil {

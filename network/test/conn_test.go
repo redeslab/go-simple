@@ -320,21 +320,22 @@ func TestJsonConn4(t *testing.T) {
 	}
 	fmt.Println("---------5555555---_>")
 
-	test_data := make([]byte, 100)
-	for i := uint8(0); i < 100; i++ {
-		test_data[i] = i
+	test_data := make([]byte, 1000000)
+	for i := 0; i < 1000000; i++ {
+		test_data[i] = uint8(i)
 	}
 	_, err = lvConn.Write(test_data)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	buff := make([]byte, 18)
+	buff := make([]byte, 255)
 	for {
 		n, err := lvConn.Read(buff)
 		if err != nil {
 			t.Fatal(err)
 		}
+		time.Sleep(time.Second)
 		fmt.Println("compare data:", buff[:n])
 	}
 }

@@ -26,7 +26,6 @@ func NewLVConn(conn net.Conn) net.Conn {
 func (lc *LVConn) Read(buf []byte) (int, error) {
 	leftLen := len(lc.bufCache)
 	if leftLen > 0 {
-
 		cpLen := copy(buf, lc.bufCache)
 		if cpLen == leftLen {
 			lc.bufCache = nil
@@ -45,6 +44,7 @@ func (lc *LVConn) Read(buf []byte) (int, error) {
 	if dataLen == 0 || dataLen >= MaxBuffer {
 		return 0, fmt.Errorf("wrong buffer size:%d", dataLen)
 	}
+	fmt.Println("=============> dataLen=>", dataLen)
 
 	bufLen := len(buf)
 	if bufLen >= dataLen {
