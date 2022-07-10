@@ -104,7 +104,7 @@ func (w *worker) upStream(aesConn, tgtConn net.Conn) {
 			nLog.Warningf("[%d]write: client---->proxy--xxx-->target err=>%s", w.wid, err)
 			return
 		}
-		nLog.Debugf("[%d]read: client---->proxy---->target data:%d ", w.wid, no)
+		nLog.Debugf("[%d]upStream: client---->proxy---->target data:%d ", w.wid, no)
 	}
 }
 
@@ -128,7 +128,7 @@ func (w *worker) downStream(aesConn, tgtConn net.Conn) {
 			break
 		}
 
-		nLog.Debugf("[%d]read: client<----proxy<--xxx--target data:%d written:%d", w.wid, no, writeNo)
+		nLog.Debugf("[%d]downStream: client<----proxy<--xxx--target data:%d written:%d", w.wid, no, writeNo)
 	}
 
 	//	var idx = 0
