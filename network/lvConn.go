@@ -16,11 +16,11 @@ const (
 type LVConn struct {
 	net.Conn
 	bufCache []byte
-	lenBuf   []byte
+	lenBuf   [LenSize]byte
 }
 
 func NewLVConn(conn net.Conn) net.Conn {
-	return &LVConn{Conn: conn, lenBuf: make([]byte, LenSize)}
+	return &LVConn{Conn: conn}
 }
 
 func (lc *LVConn) Read(buf []byte) (int, error) {
@@ -34,12 +34,12 @@ func (lc *LVConn) Read(buf []byte) (int, error) {
 		}
 		return cpLen, nil
 	}
-
-	if _, err := io.ReadFull(lc.Conn, lc.lenBuf); err != nil {
+	//fmt.Println("=============>", len(lc.lenBuf[:]), cap(lc.lenBuf))
+	if _, err := io.ReadFull(lc.Conn, lc.lenBuf[:]); err != nil {
 		return 0, err
 	}
 
-	dataLen := int(util.ByteToUint(lc.lenBuf))
+	dataLen := int(util.ByteToUint(lc.lenBuf[:]))
 	if dataLen == 0 || dataLen >= MaxBuffer {
 		return 0, fmt.Errorf("wrong buffer size:%d", dataLen)
 	}
