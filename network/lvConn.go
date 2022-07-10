@@ -26,15 +26,17 @@ func NewLVConn(conn net.Conn) net.Conn {
 func (lc *LVConn) Read(buf []byte) (int, error) {
 	leftLen := len(lc.bufCache)
 	if leftLen > 0 {
+
 		cpLen := copy(buf, lc.bufCache)
 		if cpLen == leftLen {
 			lc.bufCache = nil
 		} else {
 			lc.bufCache = lc.bufCache[cpLen:]
 		}
+		//fmt.Println("=============> buf cached", leftLen, cpLen)
 		return cpLen, nil
 	}
-	//fmt.Println("=============>", len(lc.lenBuf[:]), cap(lc.lenBuf))
+
 	if _, err := io.ReadFull(lc.Conn, lc.lenBuf[:]); err != nil {
 		return 0, err
 	}
@@ -47,19 +49,22 @@ func (lc *LVConn) Read(buf []byte) (int, error) {
 	bufLen := len(buf)
 	if bufLen >= dataLen {
 		buf = buf[:dataLen]
+		//fmt.Println("=============> buf is enough", bufLen, dataLen)
 		return io.ReadFull(lc.Conn, buf)
 	}
 
-	n, err := io.ReadFull(lc.Conn, buf)
+	//fmt.Println("=============> buf is small", bufLen, dataLen)
+	lc.bufCache = make([]byte, dataLen)
+	n, err := io.ReadFull(lc.Conn, lc.bufCache)
 	if err != nil {
 		return n, err
 	}
-
-	lc.bufCache = make([]byte, dataLen-bufLen)
-	_, err = io.ReadFull(lc.Conn, lc.bufCache)
-	if err != nil {
-		return bufLen, err
-	}
+	//fmt.Println("=============> read to cache first", n)
+	cpLen := copy(buf, lc.bufCache)
+	lc.bufCache = lc.bufCache[cpLen:]
+	//fmt.Println("=============> read left", cpLen)
+	//fmt.Println(buf)
+	//fmt.Println(lc.bufCache)
 	return bufLen, nil
 }
 
