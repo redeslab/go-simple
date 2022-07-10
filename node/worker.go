@@ -25,7 +25,7 @@ func (w *worker) startWork() {
 	lvConn := network.NewLVConn(conn)
 	jsonConn := &network.JsonConn{Conn: lvConn}
 	req := &SetupReq{}
-	ctrlBuf := make([]byte, 1<<11)
+	ctrlBuf := make([]byte, DefaultBufSize)
 	if err := jsonConn.ReadJsonBuffer(ctrlBuf, req); err != nil {
 		nLog.Errorf("[%d]read setup msg err:%s", w.wid, err)
 		return

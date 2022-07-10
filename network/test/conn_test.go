@@ -1,9 +1,12 @@
-package network
+package test
 
 import (
 	"fmt"
+	"github.com/redeslab/go-simple/network"
+	"github.com/redeslab/go-simple/node"
 	"net"
 	"testing"
+	"time"
 )
 
 func initTcpSrv() {
@@ -52,7 +55,7 @@ func TestLVConn(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	var lvCnn = NewLVConn(conn)
+	var lvCnn = network.NewLVConn(conn)
 	_, err = lvCnn.Write(test_data)
 	if err != nil {
 		t.Fatal(err)
@@ -82,10 +85,10 @@ func TestAesConn1(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	key := NewSalt()
-	iv := NewSalt()
+	key := network.NewSalt()
+	iv := network.NewSalt()
 
-	aesConn, err := NewAesConn(conn, (*key)[:], *iv)
+	aesConn, err := network.NewAesConn(conn, (*key)[:], *iv)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -105,7 +108,7 @@ func TestAesConn1(t *testing.T) {
 	}
 }
 
-func initTcpSrv2(k []byte, iv Salt) {
+func initTcpSrv2(k []byte, iv network.Salt) {
 	conn, err := net.ListenTCP("tcp4", &net.TCPAddr{
 		Port: 1112,
 	})
@@ -117,8 +120,8 @@ func initTcpSrv2(k []byte, iv Salt) {
 		if err != nil {
 			panic(err)
 		}
-		lv := &LVConn{Conn: newConn}
-		aesConn, err := NewAesConn(lv, k, iv)
+		lv := &network.LVConn{Conn: newConn}
+		aesConn, err := network.NewAesConn(lv, k, iv)
 		if err != nil {
 			panic(err)
 		}
@@ -127,8 +130,8 @@ func initTcpSrv2(k []byte, iv Salt) {
 }
 func TestAesConn2(t *testing.T) {
 
-	key := NewSalt()
-	iv := NewSalt()
+	key := network.NewSalt()
+	iv := network.NewSalt()
 	go initTcpSrv2((*key)[:], *iv)
 
 	test_data := make([]byte, 100)
@@ -142,11 +145,11 @@ func TestAesConn2(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	lvConn := &LVConn{
+	lvConn := &network.LVConn{
 		Conn: conn,
 	}
 
-	aesConn, err := NewAesConn(lvConn, (*key)[:], *iv)
+	aesConn, err := network.NewAesConn(lvConn, (*key)[:], *iv)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -166,7 +169,7 @@ func TestAesConn2(t *testing.T) {
 	}
 }
 
-func initTcpSrv3(k []byte, iv Salt) {
+func initTcpSrv3(k []byte, iv network.Salt) {
 	conn, err := net.ListenTCP("tcp4", &net.TCPAddr{
 		Port: 1113,
 	})
@@ -178,20 +181,21 @@ func initTcpSrv3(k []byte, iv Salt) {
 		if err != nil {
 			panic(err)
 		}
-		aesConn, err := NewAesConn(newConn, k, iv)
+		aesConn, err := network.NewAesConn(newConn, k, iv)
 		if err != nil {
 			panic(err)
 		}
-		lv := &LVConn{Conn: aesConn}
+		lv := &network.LVConn{Conn: aesConn}
 		go work(lv)
 	}
 }
 
 func TestAesConn3(t *testing.T) {
 
-	key := NewSalt()
-	iv := NewSalt()
+	key := network.NewSalt()
+	iv := network.NewSalt()
 	go initTcpSrv3((*key)[:], *iv)
+	time.Sleep(time.Second * 3)
 
 	test_data := make([]byte, 100)
 	for i := uint8(0); i < 100; i++ {
@@ -205,11 +209,11 @@ func TestAesConn3(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	aesConn, err := NewAesConn(conn, (*key)[:], *iv)
+	aesConn, err := network.NewAesConn(conn, (*key)[:], *iv)
 	if err != nil {
 		t.Fatal(err)
 	}
-	lvConn := &LVConn{
+	lvConn := &network.LVConn{
 		Conn: aesConn,
 	}
 
@@ -219,6 +223,113 @@ func TestAesConn3(t *testing.T) {
 	}
 
 	buff := make([]byte, 21)
+	for {
+		n, err := lvConn.Read(buff)
+		if err != nil {
+			t.Fatal(err)
+		}
+		fmt.Println("compare data:", buff[:n])
+	}
+}
+
+func initTcpSrv4(k []byte, iv network.Salt) {
+	conn, err := net.ListenTCP("tcp4", &net.TCPAddr{
+		Port: 1114,
+	})
+	if err != nil {
+		panic(err)
+	}
+	for {
+
+		newConn, err := conn.AcceptTCP()
+		if err != nil {
+			panic(err)
+		}
+		go func() {
+			fmt.Println("---------xxxx---_>")
+			lvConn := network.NewLVConn(newConn)
+			jsonConn := &network.JsonConn{Conn: lvConn}
+			req := &node.SetupReq{}
+			ctrlBuf := make([]byte, 2048)
+			if err := jsonConn.ReadJsonBuffer(ctrlBuf, req); err != nil {
+				panic(err)
+			}
+			jsonConn.WriteAck(nil)
+			fmt.Println("---------33333---_>")
+
+			aesConn, err := network.NewAesConn(newConn, k, iv)
+			if err != nil {
+				panic(err)
+			}
+			lvConn = network.NewLVConn(aesConn)
+
+			jsonConn = &network.JsonConn{Conn: lvConn}
+			prob := &node.ProbeReq{}
+			if err := jsonConn.ReadJsonBuffer(ctrlBuf, prob); err != nil {
+				panic(err)
+			}
+			fmt.Println("---------4444444---_>", prob.Target)
+			jsonConn.WriteAck(nil)
+
+			work(lvConn)
+		}()
+
+	}
+}
+
+func TestJsonConn4(t *testing.T) {
+
+	key := network.NewSalt()
+	iv := network.NewSalt()
+	go initTcpSrv4((*key)[:], *iv)
+	time.Sleep(time.Second * 3)
+	fmt.Println("---------11111---_>")
+
+	conn, err := net.DialTCP("tcp", nil, &net.TCPAddr{
+		IP:   net.ParseIP("127.0.0.1"),
+		Port: 1114,
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	lvConn := network.NewLVConn(conn)
+
+	req := &node.SetupReq{
+		IV:      *iv,
+		SubAddr: "1111111",
+	}
+	jsonConn := &network.JsonConn{Conn: lvConn}
+	buf := make([]byte, 2048)
+	if err := jsonConn.SynBuffer(buf, req); err != nil {
+		t.Fatal(err)
+	}
+	fmt.Println("---------2222222---_>")
+
+	aesConn, err := network.NewAesConn(conn, (*key)[:], *iv)
+	if err != nil {
+		t.Fatal(err)
+	}
+	lvConn = network.NewLVConn(aesConn)
+
+	jsonConn = &network.JsonConn{Conn: lvConn}
+	if err := jsonConn.SynBuffer(buf, &node.ProbeReq{
+		Target: "www.google.com",
+	}); err != nil {
+		t.Fatal(err)
+	}
+	fmt.Println("---------5555555---_>")
+
+	test_data := make([]byte, 100)
+	for i := uint8(0); i < 100; i++ {
+		test_data[i] = i
+	}
+	_, err = lvConn.Write(test_data)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	buff := make([]byte, 18)
 	for {
 		n, err := lvConn.Read(buff)
 		if err != nil {
