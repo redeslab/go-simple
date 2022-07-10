@@ -37,16 +37,14 @@ func (w *worker) startWork() {
 		nLog.Errorf("[%d]generate aes key err:%s", w.wid, err)
 		return
 	}
-	nLog.Errorf("[%d]create aes connection err:%v", w.wid, aesKey)
 
-	aesConn, err := network.NewAesConn(conn, aesKey[:], req.IV)
+	aesConn, err := network.NewAesConn(lvConn, aesKey[:], req.IV)
 	if err != nil {
 		nLog.Errorf("[%d]create aes connection err:%s", w.wid, err)
 		return
 	}
-	lvConn = network.NewLVConn(aesConn)
 
-	jsonConn = &network.JsonConn{Conn: lvConn}
+	jsonConn = &network.JsonConn{Conn: aesConn}
 	prob := &ProbeReq{}
 	if err := jsonConn.ReadJsonBuffer(ctrlBuf, prob); err != nil {
 		nLog.Errorf("[%d]read probe msg err:%s", w.wid, err)
@@ -62,13 +60,14 @@ func (w *worker) startWork() {
 	defer tgtConn.SetDeadline(time.Now().Add(_conf.TimeOut))
 	jsonConn.WriteAck(nil)
 
-	nLog.Debugf("Setup pipe[%d] for:[%s] from:%s ",
+	nLog.Debugf("Setup pipe[%d] for:[%s] mtu:[%d] from:%s ",
 		w.wid,
 		prob.Target,
+		req.MTU,
 		aesConn.RemoteAddr().String())
 
-	go w.upStream(lvConn, tgtConn)
-	w.downStream(lvConn, tgtConn)
+	go w.upStream(aesConn, tgtConn)
+	w.downStream(aesConn, tgtConn, req.MTU)
 	_ = tgtConn.Close()
 }
 
@@ -90,10 +89,10 @@ func relay(src, dst net.Conn) {
 		dst.RemoteAddr().String())
 }
 
-func (w *worker) upStream(lvConn, tgtConn net.Conn) {
+func (w *worker) upStream(aesConn, tgtConn net.Conn) {
 	buffer := make([]byte, DefaultBufSize)
 	for {
-		no, err := lvConn.Read(buffer)
+		no, err := aesConn.Read(buffer)
 		if no == 0 {
 			if err != io.EOF {
 				nLog.Warningf("[%d]read:client--xxx-->proxy---->target err=>%s left:%d", w.wid, err, no)
@@ -111,8 +110,12 @@ func (w *worker) upStream(lvConn, tgtConn net.Conn) {
 	}
 }
 
-func (w *worker) downStream(lvConn, tgtConn net.Conn) {
-	buffer := make([]byte, DefaultBufSize)
+func (w *worker) downStream(aesConn, tgtConn net.Conn, mtu int) {
+	if mtu == 0 {
+		mtu = DefaultBufSize
+	}
+
+	buffer := make([]byte, mtu)
 	for {
 		no, err := tgtConn.Read(buffer)
 		if no == 0 {
@@ -125,7 +128,7 @@ func (w *worker) downStream(lvConn, tgtConn net.Conn) {
 			break
 		}
 
-		writeNo, err := lvConn.Write(buffer[:no])
+		writeNo, err := aesConn.Write(buffer[:no])
 		if err != nil {
 			nLog.Warningf("[%d]write client<--xxx--proxy<----target err:%s left=%d", w.wid, err, no)
 			break

@@ -9,14 +9,13 @@ import (
 )
 
 const (
-	MaxBuffer = 1 << 30
-	LenSize   = 4
+	MTU     = 1 << 24
+	LenSize = 4
 )
 
 type LVConn struct {
 	net.Conn
-	bufCache []byte
-	lenBuf   [LenSize]byte
+	lenBuf [LenSize]byte
 }
 
 func NewLVConn(conn net.Conn) net.Conn {
@@ -24,48 +23,16 @@ func NewLVConn(conn net.Conn) net.Conn {
 }
 
 func (lc *LVConn) Read(buf []byte) (int, error) {
-	leftLen := len(lc.bufCache)
-	if leftLen > 0 {
-		cpLen := copy(buf, lc.bufCache)
-		if cpLen == leftLen {
-			lc.bufCache = nil
-		} else {
-			lc.bufCache = lc.bufCache[cpLen:]
-		}
-		//fmt.Println("=============> buf cached", leftLen, cpLen)
-		return cpLen, nil
-	}
 
 	if _, err := io.ReadFull(lc.Conn, lc.lenBuf[:]); err != nil {
 		return 0, err
 	}
 
 	dataLen := int(util.ByteToUint(lc.lenBuf[:]))
-	if dataLen == 0 || dataLen >= MaxBuffer {
-		return 0, fmt.Errorf("wrong buffer size:%d", dataLen)
+	if dataLen == 0 || dataLen >= MTU {
+		return 0, fmt.Errorf("MTU overflow:%d", dataLen)
 	}
-	fmt.Println("=============> dataLen=>", dataLen)
-
-	bufLen := len(buf)
-	if bufLen >= dataLen {
-		buf = buf[:dataLen]
-		//fmt.Println("=============> buf is enough", bufLen, dataLen)
-		return io.ReadFull(lc.Conn, buf)
-	}
-
-	//fmt.Println("=============> buf is small", bufLen, dataLen)
-	lc.bufCache = make([]byte, dataLen)
-	n, err := io.ReadFull(lc.Conn, lc.bufCache)
-	if err != nil {
-		return n, err
-	}
-	//fmt.Println("=============> read to cache first", n)
-	cpLen := copy(buf, lc.bufCache)
-	lc.bufCache = lc.bufCache[cpLen:]
-	//fmt.Println("=============> read left", cpLen)
-	//fmt.Println(buf)
-	//fmt.Println(lc.bufCache)
-	return bufLen, nil
+	return io.ReadFull(lc.Conn, buf[:dataLen])
 }
 
 func (lc *LVConn) Write(buf []byte) (n int, err error) {

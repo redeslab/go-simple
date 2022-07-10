@@ -16,11 +16,11 @@ const (
 type SetupReq struct {
 	IV      network.Salt
 	SubAddr account.ID
+	MTU     int `json:"mtu,omitempty"`
 }
 
 type ProbeReq struct {
-	Target        string `json:"Target"`
-	MaxPacketSize int    `json:"MaxPacketSize,omitempty"`
+	Target string `json:"Target"`
 }
 
 func (sr *SetupReq) String() string {

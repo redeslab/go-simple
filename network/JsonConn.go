@@ -60,7 +60,6 @@ func (conn *JsonConn) ReadJsonBuffer(buff []byte, v interface{}) error {
 	if n == 0 {
 		return fmt.Errorf("read empty data")
 	}
-	//fmt.Println("======>>>remove me later:=>", string(buffer))
 	if err = json.Unmarshal(buff[:n], v); err != nil {
 		return err
 	}
