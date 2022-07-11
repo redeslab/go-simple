@@ -125,7 +125,7 @@ func (w *worker) downStream(aesConn, tgtConn net.Conn, mtu int) {
 				nLog.Debugf("[%d]read: client<----proxy<--xxx--target EOF ", w.wid)
 			}
 			_ = tgtConn.SetDeadline(time.Now().Add(_conf.TimeOut))
-			break
+			return
 		}
 
 		writeNo, err := aesConn.Write(buffer[:no])
