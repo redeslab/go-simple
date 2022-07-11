@@ -60,7 +60,7 @@ func (w *worker) startWork() {
 	defer tgtConn.SetDeadline(time.Now().Add(_conf.TimeOut))
 	jsonConn.WriteAck(nil)
 
-	nLog.Debugf("Setup pipe[%d] for:[%s] mtu:[%d] from:%s ",
+	nLog.Infof("Setup pipe[%d] for:[%s] mtu:[%d] from:%s ",
 		w.wid,
 		prob.Target,
 		req.MTU,
